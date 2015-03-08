@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="types_of_sending_list">
+        <item >по SMS</item>
+        <item >по e-mail</item>
+        <item >как текст</item>
+    </string-array>
+    
+    <string-array name="types_of_removing_list">
+        <item >Удалить</item>
+        <item >Удалить из облака</item>
+        <item >Удалить везде</item>
+    </string-array>
+    
+    <string-array name="prod_categories">
+		<item>Молочные изделия, сыр, яйца</item>
+		<item>Хлеб, булка, выпечка</item>
+		<item>Мясные, рыбные и куриные продукты</item>
+		<item>Замороженные продукты</item>
+		<item>Кулинария</item>
+		<item>Овощи, фрукты, ягоды</item>
+		<item>Безалкогольные напитки</item>
+		<item>Алкоголь</item>
+		<item>Сладости, бакалея, консервы</item>
+		<item>Корм для животных</item>
+		<item>Детское питание</item>
+	</string-array>
+	
+	<string-array name="prom_categories">
+		<item>Бытовая химия</item>
+		<item>Дом, кухня</item>
+		<item>Домашние животные</item>
+		<item>Инструменты</item>
+		<item>Канцелярские товары</item>
+		<item>Косметика и здоровье</item>
+		<item>Одежда</item>
+		<item>Мебель</item>
+		<item>Сад</item>
+		<item>Спорт</item>
+		<item>Товары для детей</item>
+		<item>Цветы и подарки</item>
+		<item>Электроника, бытовая техника, компьютеры</item>
+		<item>Другое</item>
+	</string-array>
+	
+	<string-array name="prod_categories_ids">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>6</item>
+		<item>4</item>
+		<item>5</item>
+		<item>8</item>
+		<item>9</item>
+		<item>7</item>
+		<item>10</item>
+		<item>11</item>
+	</string-array>
+	
+	<string-array name="prom_categories_ids">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>8</item>
+		<item>7</item>
+		<item>9</item>
+		<item>10</item>
+		<item>11</item>
+		<item>12</item>
+		<item>13</item>
+		<item>14</item>
+	</string-array>
+	
+	<string-array name="navigation_menu_items">
+		<item >Акции</item>
+		<item >Списки</item>
+		<item >Карта</item>
+		<item >Настройки</item>
+	</string-array>
+    
+</resources>
