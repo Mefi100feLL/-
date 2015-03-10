@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/activity_all_products_layout_with_fields"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/activity_all_products_edittext_for_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/content_name_of_listitem" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/activity_all_products_button_for_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/activity_all_products_edittext_for_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/content_count_of_listitem"/>
+
+        <EditText
+            android:id="@+id/activity_all_products_edittext_for_edizm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/content_edizm_of_listitem"/>
+
+        <EditText
+            android:id="@+id/activity_all_products_edittext_for_coast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/content_coast_of_listitem"/>
+
+        <EditText
+            android:id="@+id/activity_all_products_edittext_for_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/content_category_of_listitem"/>
+
+        <EditText
+            android:id="@+id/activity_all_products_edittext_for_shop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/content_shop_of_listitem"/>
+
+        <EditText
+            android:id="@+id/activity_all_products_edittext_for_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/content_comment_of_listitem" />
+
+    </LinearLayout>
+    
+    <ListView
+        android:id="@+id/activity_all_products_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>

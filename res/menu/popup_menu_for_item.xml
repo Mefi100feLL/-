@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_edit_item"
+        app:showAsAction="always"
+        android:title="@string/action_edit_item"
+        android:icon="@drawable/ic_create_white_24dp"/>
+    
+    <item
+        android:id="@+id/action_remove_item"
+        app:showAsAction="always"
+        android:title="@string/action_remove_item"
+        android:icon="@drawable/ic_delete_white_24dp"/>
+    
+    <item
+        android:id="@+id/action_send_item"
+        app:showAsAction="always"
+        android:title="@string/action_send_item"
+        android:icon="@drawable/ic_share_white_24dp"/>
+
+</menu>

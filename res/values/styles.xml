@@ -1,0 +1,20 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+		<item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+		<item name="floatingActionButtonStyle">@style/AppTheme.Fab.Light</item>
+		
+		<item name="windowActionModeOverlay">true</item>
+		<item name="actionModeBackground">@color/primary_dark</item>
+		<item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+    
+    <style name="AppTheme.Fab.Light" parent="FloatingActionButton">
+        <item name="floatingActionButtonColor">@color/color_for_fab</item>
+        <item name="floatingActionButtonImplicitElevation">true</item>
+        <item name="floatingActionButtonSize">normal</item>
+    </style>
+
+</resources>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_for_list" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/abc_list_selector_holo_light"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/item_listitem_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/item_listitem_image_important"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_important" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/item_listitem_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/item_listitem_edizm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/item_listitem_po"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/secondary_text"
+                android:text="@string/string_po" />
+
+            <TextView
+                android:id="@+id/item_listitem_coast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/item_listitem_shop"
+                style="android:text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/secondary_text"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/item_listitem_total_one"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textColor="@color/secondary_text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/item_listitem_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/item_listitem_total_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/secondary_text" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>
