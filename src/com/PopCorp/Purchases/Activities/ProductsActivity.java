@@ -7,6 +7,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +18,8 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.Controllers.MenuController;
@@ -27,9 +32,11 @@ public class ProductsActivity extends ActionBarActivity{
 
 	public static final String INTENT_TO_PRODUCTS_LISTITEMS = "array";
 	
-	private ListView listView;
+	private RecyclerView listView;
 	private FloatingActionButton floatingButton;
 	private Toolbar toolBar;
+	private ProgressBar progress;
+	private TextView textViewEmpty;
 	
 	private ProductsController controller;
 	
@@ -39,30 +46,31 @@ public class ProductsActivity extends ActionBarActivity{
 		setContentView(R.layout.activity_products);
 		
 		toolBar = (Toolbar) findViewById(R.id.activity_products_toolbar);
+		progress = (ProgressBar) findViewById(R.id.activity_products_progressbar);
+		textViewEmpty = (TextView) findViewById(R.id.activity_products_textview_empty);
 	    setSupportActionBar(toolBar);
 	    getSupportActionBar().setHomeButtonEnabled(true);
 	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		listView = (ListView) findViewById(R.id.activity_products_listview);
+		listView = (RecyclerView) findViewById(R.id.activity_products_listview);
 		floatingButton = (FloatingActionButton) findViewById(R.id.activity_products_floating_action_button);
 		floatingButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				getBack();
+				applyAndGoBack();
 			}
 		});
 		
 		ArrayList<Product> array = getIntent().getParcelableArrayListExtra(INTENT_TO_PRODUCTS_LISTITEMS);
 		controller = new ProductsController(this, array);
 		
+		LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+		listView.setLayoutManager(mLayoutManager);
 		listView.setAdapter(controller.getAdapter());
 		
-		listView.setOnItemClickListener(new OnItemClickListener(){
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				controller.changeItemSelection(view, position);
-			}
-		});
+		RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+		listView.setItemAnimator(itemAnimator);
+		listView.setAdapter(controller.getAdapter());
 		
 		getSupportLoaderManager().initLoader(MenuController.ID_FOR_CREATE_LOADER_FROM_DB, new Bundle(), controller);
 
@@ -70,7 +78,7 @@ public class ProductsActivity extends ActionBarActivity{
 		loaderFromDB.forceLoad();
 	}
 	
-	private void getBack(){
+	private void applyAndGoBack(){
 		Intent intent = new Intent();
 		intent.putParcelableArrayListExtra(ListFragment.INTENT_TO_LIST_RETURNED_LISTITEMS, controller.apply());
 		setResult(RESULT_OK, intent);
@@ -97,5 +105,17 @@ public class ProductsActivity extends ActionBarActivity{
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void showListView(int size){
+		progress.setVisibility(View.GONE);
+		if (size==0){
+			listView.setVisibility(View.GONE);
+			textViewEmpty.setVisibility(View.VISIBLE);
+		} else{
+			listView.setVisibility(View.VISIBLE);
+			textViewEmpty.setVisibility(View.GONE);
+		}
+		
 	}
 }

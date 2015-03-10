@@ -1,24 +1,15 @@
 package com.PopCorp.Purchases.Controllers;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.view.View;
-import android.widget.CheckBox;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.Activities.ProductsActivity;
 import com.PopCorp.Purchases.Adapters.ProductsAdapter;
-import com.PopCorp.Purchases.Data.ListItem;
 import com.PopCorp.Purchases.Data.Product;
 import com.PopCorp.Purchases.DataBase.DB;
 import com.PopCorp.Purchases.Loaders.ProductsLoader;
@@ -27,15 +18,17 @@ public class ProductsController implements LoaderCallbacks<Cursor>{
 	
 	public static final int ID_FOR_CREATE_LOADER_FROM_DB = 1;
 	
-	private Context activity;
+	private ProductsActivity activity;
 	private DB db;
+	
 	private ProductsAdapter adapter;
-	private ArrayList<Product> items;
-	private ArrayList<String> categories;
-	private ArrayList<Integer> colors;
+	private ArrayList<Product> items = new ArrayList<Product>();
 	private ArrayList<Product> itemsInList;
 	
-	public ProductsController(Context context, ArrayList<Product> itemsInList){
+	private ArrayList<String> categories;
+	private ArrayList<Integer> colors;
+	
+	public ProductsController(ProductsActivity context, ArrayList<Product> itemsInList){
 		this.activity = context;
 		this.itemsInList = itemsInList;
 		db = new DB(activity);
@@ -43,31 +36,8 @@ public class ProductsController implements LoaderCallbacks<Cursor>{
 		
 		categories = getCategories();
 		colors = getColors();
-		adapter = new ProductsAdapter(activity, items, categories, colors);
-	}
-	
-	public ArrayList<Product> apply(){
-		ArrayList<Product> result = new ArrayList<Product>();
-		for (Product product : items){
-			if (product.isSelected()){
-				result.add(product);
-			}
-		}
-		return result;
-	}
-	
-	public void changeItemSelection(View view, int position) {
-		if (items.get(position).isSelected()){
-			//view.findViewById(R.id.item_product_count_layout).setVisibility(View.GONE);
-			((CheckBox) view.findViewById(R.id.item_product_in_products_checkbox)).setChecked(false);
-			items.get(position).setSelected(false);
-		} else {
-			//view.findViewById(R.id.item_product_count_layout).setVisibility(View.VISIBLE);
-			((CheckBox) view.findViewById(R.id.item_product_in_products_checkbox)).setChecked(true);
-			items.get(position).setSelected(true);
-		}
-	}
-	
+		adapter = new ProductsAdapter(activity, this, items, categories, colors);
+	}	
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -80,23 +50,32 @@ public class ProductsController implements LoaderCallbacks<Cursor>{
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (cursor==null){
-			//no items
-		}
-		if (cursor.moveToFirst()){
-			addListItemAllFromCursor(cursor);
-			while (cursor.moveToNext()){
+		if (cursor!=null){
+			if (cursor.moveToFirst()){
 				addListItemAllFromCursor(cursor);
+				while (cursor.moveToNext()){
+					addListItemAllFromCursor(cursor);
+				}
 			}
+			cursor.close();
+			activity.showListView(items.size());
+			adapter.getFilter().filter(ProductsAdapter.FILTER_TYPE_NAMES);
 		}
-		cursor.close();
-		Collections.sort(items, new SortOnlyNames());
-		adapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		
+	}
+	
+	public ArrayList<Product> apply(){
+		ArrayList<Product> result = new ArrayList<Product>();
+		for (Product product : items){
+			if (product.isSelected()){
+				result.add(product);
+			}
+		}
+		return result;
 	}
 	
 	private void addListItemAllFromCursor(Cursor cursor){
@@ -105,88 +84,29 @@ public class ProductsController implements LoaderCallbacks<Cursor>{
 		for (Product item : itemsInList){
 			if (item.getName().equals(newProduct.getName())){
 				newProduct.setCount(item.getCountInString());
-			}
-		}
-	}
-	
-	
-	public void closeDB(){
-		if (db!=null){
-			if (!db.isClosed()){
-				db.close();
-			}
-		}
-	}
-	
-	public void openDB(){
-		if (db!=null){
-			if (db.isClosed()){
-				db.open();
+				newProduct.setSelected(true);
 			}
 		}
 	}
 
-	public ArrayList<Product> getItems() {
-		return items;
-	}
-
-	public ProductsAdapter getAdapter() {
-		return adapter;
-	}
-
-	public void setAdapter(ProductsAdapter adapter) {
-		this.adapter = adapter;
-	}
 
 	public void sort(int itemId) {
 		switch (itemId){
 		case R.id.action_sort_by_abc:{
-			Collections.sort(items, new SortOnlyNames());
-			adapter.notifyDataSetChanged();
+			adapter.getFilter().filter(ProductsAdapter.FILTER_TYPE_NAMES);
 			break;
 		}
 		case R.id.action_sort_by_category:{
-			Collections.sort(items, new SortOnlyCategories());
-			adapter.notifyDataSetChanged();
+			adapter.getFilter().filter(ProductsAdapter.FILTER_TYPE_CATEGORIES);
 			break;
 		}
 		case R.id.action_sort_by_favorite:{
+			adapter.getFilter().filter(ProductsAdapter.FILTER_TYPE_FAVORITE);
 			break;
 		}
 		}
 	}
 	
-	private class SortOnlyCategories implements Comparator<Product>
-	{
-		public int compare(Product p1, Product p2)
-		{
-			if ((p1.getCategory().equals(p2.getCategory()))){
-				return p1.getName().compareToIgnoreCase(p2.getName());
-			}else{
-				if (categories.contains(p1.getCategory()) && categories.contains(p2.getCategory())){
-					if (categories.indexOf(p1.getCategory()) > categories.indexOf(p2.getCategory())){
-						return 1;
-					}else{
-						return -1;
-					}
-				}else if (categories.contains(p1.getCategory())){
-					return 1;
-				}else if (categories.contains(p2.getCategory())){
-					return -1;
-				}else{
-					return p1.getCategory().compareToIgnoreCase(p2.getCategory());
-				}
-			}
-		}
-	}
-	
-	private class SortOnlyNames implements Comparator<Product>
-	{
-		public int compare(Product p1, Product p2)
-		{
-			return p1.getName().compareToIgnoreCase(p2.getName());
-		}
-	}
 	
 	public ArrayList<String> getCategories() {
 		ArrayList<String> result = new ArrayList<String>();
@@ -216,5 +136,34 @@ public class ProductsController implements LoaderCallbacks<Cursor>{
 			cursor.close();
 		}
 		return result;
+	}
+	
+	
+	public void closeDB(){
+		if (db!=null){
+			if (!db.isClosed()){
+				db.close();
+			}
+		}
+	}
+	
+	public void openDB(){
+		if (db!=null){
+			if (db.isClosed()){
+				db.open();
+			}
+		}
+	}
+	/////////////////////////////////////////////////////////////
+	public ArrayList<Product> getItems() {
+		return items;
+	}
+
+	public ProductsAdapter getAdapter() {
+		return adapter;
+	}
+
+	public void setAdapter(ProductsAdapter adapter) {
+		this.adapter = adapter;
 	}
 }

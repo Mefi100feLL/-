@@ -90,6 +90,8 @@
 	<string name="string_all_shops">Все магазины</string>
 	<string name="string_total_items">Кол-во товаров:</string>
 	<string name="string_coast_za_ed">Цена за</string>
+	<string name="string_list_of_products_clear">Список товаров пуст</string>
+	<string name="string_list_of_favorite_clear">Нет избранных</string>
 	
 	<string name="string_all_products">Все товары</string>
 	

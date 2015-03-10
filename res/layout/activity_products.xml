@@ -21,14 +21,14 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:title="@string/string_all_products" />
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/activity_products_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:listSelector="@drawable/abc_list_selector_holo_light" >
+        	android:scrollbars="vertical"
+            android:visibility="gone" >
 
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <com.shamanland.fab.FloatingActionButton
@@ -40,5 +40,23 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:src="@drawable/ic_done" />
+
+    <TextView
+        android:id="@+id/activity_products_textview_empty"
+        style="@style/AppBaseTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/list_empty"
+        android:gravity="center_horizontal"
+        android:text="@string/string_list_of_products_clear"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/activity_products_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

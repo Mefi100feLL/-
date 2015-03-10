@@ -23,13 +23,13 @@ public class Product implements Parcelable{
 	
 	public Product(long id, String name, String count, String edizm, String coast, String category, String shop, String comment, String favorite){
 		this.id = id;
-		this.name = name;
+		setName(name);
 		setCount(count);
-		this.edizm = edizm;
+		setEdizm(edizm);
 		setCoast(coast);
-		this.category = category;
-		this.shop = shop;
-		this.comment = comment;
+		setCategory(category);
+		setShop(shop);
+		setComment(comment);
 		setFavorite(favorite);
 	}
 	
@@ -122,6 +122,9 @@ public class Product implements Parcelable{
 		return name;
 	}
 	public void setName(String name) {
+		if (name==null){
+			name = "";
+		}
 		this.name = name;
 	}
 	public BigDecimal getCount() {
@@ -141,10 +144,16 @@ public class Product implements Parcelable{
 		return edizm;
 	}
 	public void setEdizm(String edizm) {
+		if (edizm==null){
+			edizm = "";
+		}
 		this.edizm = edizm;
 	}
 	public BigDecimal getCoast() {
 		return coast;
+	}
+	public String getCoastInString(){
+		return coast.toString();
 	}
 	public void setCoast(String coast) {
 		try{
@@ -157,18 +166,27 @@ public class Product implements Parcelable{
 		return category;
 	}
 	public void setCategory(String category) {
+		if (category==null){
+			category = "";
+		}
 		this.category = category;
 	}
 	public String getShop() {
 		return shop;
 	}
 	public void setShop(String shop) {
+		if (shop==null){
+			shop = "";
+		}
 		this.shop = shop;
 	}
 	public String getComment() {
 		return comment;
 	}
 	public void setComment(String comment) {
+		if (comment==null){
+			comment = "";
+		}
 		this.comment = comment;
 	}
 

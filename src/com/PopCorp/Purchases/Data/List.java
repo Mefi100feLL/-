@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.ListIterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -243,30 +244,30 @@ public class List {
 	}
 
 	public void updateItems(DB db, ArrayList<Product> newArray){
-		/*removeNotContainsItems(db, newArray);
-		for (ListItem newItem : newArray){
-			boolean equals = false;
-			for (ListItem item : items){
-				if (item.getName().equals(newItem.getName())){
-					equals = true;
-					if (!item.equals(newItem)){
-						//update item
-					}
+		ListIterator<ListItem> iterator = items.listIterator();
+		while (iterator.hasNext()){
+			ListItem item = iterator.next();
+			boolean finded = false;
+			for (Product product : newArray){
+				if (item.getName().equals(product.getName())){
+					finded = true;
 				}
 			}
-			if (!equals){
-				addNewItem(db, 
-						newItem.getName(), 
-						newItem.getCountInString(), 
-						newItem.getEdizm(), 
-						newItem.getCoastInString(), 
-						newItem.getCategory(), 
-						newItem.getShop(), 
-						newItem.getComment(), 
-						newItem.isBuyedInString(), 
-						newItem.isImportantInString());
+			if (!finded){
+				iterator.remove();
 			}
-		}*/
+		}
+		for (Product product : newArray){
+			boolean finded = false;
+			for (ListItem item : items){
+				if (item.getName().equals(product.getName())){
+					finded = true;
+				}
+			}
+			if (!finded){
+				addNewItem(db, product.getName(), product.getCountInString(), product.getEdizm(), product.getCoastInString(), product.getCategory(), product.getShop(), product.getComment(), "false", "false");
+			}
+		}
 	}
 
 	public ArrayList<String> refreshFilterShops(){
@@ -279,22 +280,6 @@ public class List {
 			}
 		}
 		return filterShops;
-	}
-
-	private void removeNotContainsItems(DB db, ArrayList<ListItem> newArray) {
-		ArrayList<ListItem> itemsForRemove = new ArrayList<ListItem>();
-		for (ListItem item : items){
-			boolean finded = false;
-			for (ListItem newItem : newArray){
-				if (newItem.getName().equals(item.getName())){
-					finded = true;
-				}
-			}
-			if (!finded){
-				itemsForRemove.add(item);
-			}
-		}
-		removeItems(db, itemsForRemove);
 	}
 
 	public void sendToAnotherList(DB db, String datelist){
@@ -510,6 +495,6 @@ public class List {
 			Product newProduct = item.getProduct();
 			result.add(newProduct);
 		}
-		return null;
+		return result;
 	}
 }
