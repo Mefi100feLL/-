@@ -112,4 +112,8 @@ public class MenuFragment extends Fragment{
 		super.onStop();
 		controller.closeDB();
 	}
+
+	public void addListFromJSON(String json) {
+		controller.addNewListFromJSON(json);
+	}
 }

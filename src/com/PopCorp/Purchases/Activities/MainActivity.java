@@ -1,9 +1,14 @@
 package com.PopCorp.Purchases.Activities;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -64,6 +69,44 @@ public class MainActivity extends ActionBarActivity{
 	    }
 	    
 		drawerClickListener.selectItem(1);
+		
+		Uri data = getIntent().getData();
+		if (data!=null) {
+			loadFromFile(data);
+		} else {
+
+		}
+	}
+	
+	private void loadFromFile(Uri data) {
+		getIntent().setData(null);
+		try {
+			final String scheme = data.getScheme();
+			if (ContentResolver.SCHEME_CONTENT.equals(scheme) || ContentResolver.SCHEME_FILE.equals(scheme)) {
+				ContentResolver cr = getContentResolver();
+				InputStream is = cr.openInputStream(data);
+				if (is == null){
+					return;
+				}
+
+				StringBuffer buf = new StringBuffer();			
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+				String str;
+				if (is!=null) {
+					while ((str = reader.readLine()) != null) {	
+						buf.append(str + "\n" );
+					}				
+				}		
+				is.close();
+				FragmentManager fragmentManager = getSupportFragmentManager();
+			    Fragment findedFragment = fragmentManager.findFragmentByTag(MenuFragment.TAG);
+			    if (findedFragment!=null){
+			    	((MenuFragment) findedFragment).addListFromJSON(buf.toString());
+			    }
+			}
+		} catch (Exception e) {
+			finish();
+		}
 	}
 	
 	@Override

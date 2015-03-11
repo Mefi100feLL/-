@@ -224,7 +224,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 				}), layoutForSnackBar);
 	}
 
-	private void removeItemsFromTmpArray() {
+	public void removeItemsFromTmpArray() {
 		if (itemsForRemove!=null){
 			currentList.removeItems(db, itemsForRemove);
 			itemsForRemove.clear();

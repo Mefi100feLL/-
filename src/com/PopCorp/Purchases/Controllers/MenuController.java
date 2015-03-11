@@ -99,10 +99,20 @@ public class MenuController implements LoaderCallbacks<Cursor>{
 		String datelist = String.valueOf(Calendar.getInstance().getTimeInMillis());
 		long id = db.addRec(DB.TABLE_LISTS, DB.COLUMNS_LISTS, new String[] {newName, datelist, "", currency});
 		List newList = new List(db, id, newName, datelist, "", currency);
+		addListAndOpen(newList);
+	}
+
+
+	private void addListAndOpen(List newList) {
 		lists.add(newList);
 		Collections.sort(lists, new MenuComparator());
 		adapter.notifyItemInserted(lists.indexOf(newList));
 		openList(lists.indexOf(newList));
+	}
+	
+	public void addNewListFromJSON(String json){
+		List newList = new List(db, json);
+		addListAndOpen(newList);
 	}
 
 	public void openList(int position) {

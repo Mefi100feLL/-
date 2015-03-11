@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.Fragments;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
@@ -56,7 +57,7 @@ import com.shamanland.fab.FloatingActionButton;
 import com.shamanland.fab.ShowHideOnScroll;
 
 public class ListFragment extends Fragment{
-	
+
 	public static final String TAG = ListFragment.class.getSimpleName();
 
 	public static final String INTENT_TO_LIST_TITLE = "title";
@@ -81,12 +82,12 @@ public class ListFragment extends Fragment{
 	private ImageView buttonCountPlus;
 	private ImageView buttonCountMinus;
 	private FrameLayout layoutForSnackBar;
-	
+
 	private ArrayList<String> edizmsForSpinner;
 	private ArrayAdapter<String> adapterForSpinnerEdizm;
-	
+
 	private CategoriesAdapter adapterForSpinnerCategory;
-	
+
 	private ArrayList<String> shopesForSpinner;
 	private ArrayAdapter<String> adapterForSpinnerShop;
 
@@ -106,11 +107,11 @@ public class ListFragment extends Fragment{
 	private SharedPreferences sPref;
 	private SharedPreferences.Editor editor;;
 	private ActionBarActivity context;
-	
+
 	private Toolbar toolBar;
-	
+
 	private ShowHideOnScroll showHideOnScroll;
-	
+
 	private ArrayList<String> categories;
 	private ArrayList<Integer> colors;
 
@@ -120,7 +121,7 @@ public class ListFragment extends Fragment{
 		context = (ActionBarActivity) getActivity();
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
 		editor = sPref.edit();
-		
+
 		buttonForVoice = (ImageView) rootView.findViewById(R.id.fragment_list_button_for_voice);
 		listView = (RecyclerView) rootView.findViewById(R.id.fragment_list_listview);
 		layoutWithFields = (LinearLayout) rootView.findViewById(R.id.fragment_list_fields_layout);
@@ -181,9 +182,9 @@ public class ListFragment extends Fragment{
 				}
 			}
 		});
-		
+
 		setHasOptionsMenu(true);
-		
+
 		buttonForVoice.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -191,14 +192,36 @@ public class ListFragment extends Fragment{
 			}
 		});
 
-		/*Uri data = getIntent().getData();
-		if (data!=null) {
-			loadFromFile(data);
-		} else {
-			
-		}*/
+		buttonCountPlus.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				try{
+					BigDecimal count = new BigDecimal(editTextForCount.getText().toString());
+					count = count.add(new BigDecimal("1"));
+					editTextForCount.setText(count.toString());
+				} catch(Exception e){
+
+				}
+			}
+		});
+
+		buttonCountMinus.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				try{
+					BigDecimal count = new BigDecimal(editTextForCount.getText().toString());
+					if (count.doubleValue()>=1){
+						count = count.subtract(new BigDecimal("1"));
+						editTextForCount.setText(count.toString());
+					}
+				} catch (Exception e){
+
+				}
+			}
+		});
+
 		toolBar = (Toolbar) getActivity().findViewById(R.id.activity_main_toolbar);
-		
+
 		toolBar.setTitle(getArguments().getString(INTENT_TO_LIST_TITLE));
 		controller = new ListController(this, getArguments().getString(INTENT_TO_LIST_TITLE), getArguments().getString(INTENT_TO_LIST_DATELIST), listView, layoutForSnackBar);
 
@@ -207,61 +230,32 @@ public class ListFragment extends Fragment{
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
 		listView.setLayoutManager(mLayoutManager);
 		listView.setAdapter(controller.getAdapter());
-		
+
 		RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 		listView.setItemAnimator(itemAnimator);
 
 		showHideOnScroll = new ShowHideOnScroll(floatingButton);
 		listView.setOnTouchListener(showHideOnScroll);
-		
+
 		initializeEdizms();
 		initializeSpinnerForCategory();
 		initializeSpinnerForShop();
-		
+
 		getLoaderManager().initLoader(MenuController.ID_FOR_CREATE_LOADER_FROM_DB, new Bundle(), controller);
-		
+
 		Loader<Cursor> loaderFromDB = getLoaderManager().getLoader(MenuController.ID_FOR_CREATE_LOADER_FROM_DB);
 		loaderFromDB.forceLoad();
 		return rootView;
 	}
 
-
-
-	/*private void loadFromFile(Uri data) {
-		getIntent().setData(null);
-		try {
-			final String scheme = data.getScheme();
-			if (ContentResolver.SCHEME_CONTENT.equals(scheme) || ContentResolver.SCHEME_FILE.equals(scheme)) {
-				ContentResolver cr = getContentResolver();
-				InputStream is = cr.openInputStream(data);
-				if (is == null){
-					return;
-				}
-
-				StringBuffer buf = new StringBuffer();			
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-				String str;
-				if (is!=null) {
-					while ((str = reader.readLine()) != null) {	
-						buf.append(str + "\n" );
-					}				
-				}		
-				is.close();
-				controller = new ListController(this, buf.toString());
-			}
-		} catch (Exception e) {
-			finish();
-		}
-	}*/
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	    super.onCreateOptionsMenu(menu, inflater);
-	    menu.clear();
-	    inflater.inflate(R.menu.menu_for_list, menu);
-	    this.menu = menu;
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.clear();
+		inflater.inflate(R.menu.menu_for_list, menu);
+		this.menu = menu;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
@@ -297,6 +291,7 @@ public class ListFragment extends Fragment{
 	}
 
 	private void goToProducts() {
+		controller.removeItemsFromTmpArray();
 		Intent intent = new Intent(context, ProductsActivity.class);
 		ArrayList<Product> selectedItems = controller.getCurrentList().getSelectedItems();
 		intent.putParcelableArrayListExtra(ProductsActivity.INTENT_TO_PRODUCTS_LISTITEMS, selectedItems);
@@ -373,17 +368,16 @@ public class ListFragment extends Fragment{
 		toolBar.setTitle(newName);
 	}
 
-
-
 	public void backToLists() {
+		controller.removeItemsFromTmpArray();
 		setTitle(context.getString(R.string.string_lists));
 		Fragment fragment = new MenuFragment();
 		String tag = MenuFragment.TAG;
-		
+
 		FragmentManager fragmentManager = context.getSupportFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, tag).commit();
 	}
-	
+
 	private void initializeEdizms(){
 		edizmsForSpinner = new ArrayList<String>(sPref.getStringSet(SD.PREFS_EDIZMS, new LinkedHashSet<String>()));
 
@@ -403,7 +397,7 @@ public class ListFragment extends Fragment{
 			}
 		});
 	}
-	
+
 	private int getPositionForEdizm(String edizm){
 		if (edizm==null){
 			return adapterForSpinnerEdizm.getCount()-1;
@@ -417,19 +411,19 @@ public class ListFragment extends Fragment{
 		}
 		return adapterForSpinnerEdizm.getPosition(edizm);
 	}
-	
+
 	private void addNewEdizmToPrefs(final String newEdizm) {
 		Set<String> edizmsFromPrefs = sPref.getStringSet(SD.PREFS_EDIZMS, new LinkedHashSet<String>());
 		edizmsFromPrefs.add(newEdizm);
 		editor.putStringSet(SD.PREFS_EDIZMS, edizmsFromPrefs);
 		editor.commit();
 	}
-	
-	
+
+
 	private void initializeSpinnerForCategory() {
 		categories = controller.getCategories();
 		colors = controller.getColors();
-		
+
 		adapterForSpinnerCategory = new CategoriesAdapter(context, categories, colors);
 		adapterForSpinnerCategory.setDropDownViewResource(R.layout.item_list_categories);
 		spinnerForCategory.setAdapter(adapterForSpinnerCategory);
@@ -443,9 +437,9 @@ public class ListFragment extends Fragment{
 			spinnerForCategory.setSelection(adapterForSpinnerCategory.getCount()-1);
 		}
 	}
-	
-	
-	
+
+
+
 	private void initializeSpinnerForShop() {
 		shopesForSpinner = new ArrayList<String>(sPref.getStringSet(SD.PREFS_SHOPES, new LinkedHashSet<String>()));
 		shopesForSpinner.add(getResources().getString(R.string.string_no_shop));//add item for no shop
@@ -476,7 +470,7 @@ public class ListFragment extends Fragment{
 		editor.putStringSet(SD.PREFS_SHOPES, shopesFromPrefs);
 		editor.commit();
 	}
-	
+
 	public void onBackPressed(){
 		if (layoutWithFields.getVisibility() == View.VISIBLE){
 			layoutWithFields.setVisibility(View.GONE);
@@ -510,7 +504,7 @@ public class ListFragment extends Fragment{
 		item.getSubMenu().setGroupEnabled(groupId, true);
 		item.setVisible(true);
 	}
-	
+
 	public void showFloatingButton(){
 		showHideOnScroll.onScrollDown();
 	}
