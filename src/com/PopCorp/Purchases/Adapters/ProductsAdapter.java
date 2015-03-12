@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.Adapters;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,10 +13,14 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
@@ -51,21 +56,67 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		public View view;
 		public CheckBox checkbox;
+		public LinearLayout layoutCount;
+		public TextView textCount;
+		public ImageView buttonMinus;
+		public ImageView buttonPlus;
 		private ClickListener clickListener;
+		private ClickListener minusClickListener;
+		private ClickListener plusClickListener;
 
 		public ViewHolder(View view) {
 			super(view);
 			this.view = view;
 			checkbox = (CheckBox) view.findViewById(R.id.item_product_in_products_checkbox);
+			layoutCount = (LinearLayout) view.findViewById(R.id.item_product_layout_count);
+			textCount = (TextView) view.findViewById(R.id.item_product_edit_count);
+			buttonMinus = (ImageView) view.findViewById(R.id.item_product_image_minus);
+			buttonPlus = (ImageView) view.findViewById(R.id.item_product_image_plus);
+			buttonMinus.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					try{
+						BigDecimal count = new BigDecimal(textCount.getText().toString());
+						if (count.doubleValue()>=1){
+							count = count.subtract(new BigDecimal("1"));
+							textCount.setText(count.toString());
+						}
+						minusClickListener.onClick(v, getPosition());
+					} catch (Exception e){
+
+					}
+				}
+			});
+			buttonPlus.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					try{
+						BigDecimal count = new BigDecimal(textCount.getText().toString());
+						count = count.add(new BigDecimal("1"));
+						textCount.setText(count.toString());
+						plusClickListener.onClick(v, getPosition());
+					} catch(Exception e){
+
+					}
+				}
+			});
 			view.setOnClickListener(this);
 		}
-
+		
 		public interface ClickListener {
 			public void onClick(View v, int position);
 		}
 
 		public void setClickListener(ClickListener clickListener) {
 			this.clickListener = clickListener;
+		}
+		
+		public void setMinusClickListener(ClickListener clickListener) {
+			this.minusClickListener = clickListener;
+		}
+		
+		public void setPlusClickListener(ClickListener clickListener) {
+			this.plusClickListener = clickListener;
 		}
 
 		@Override
@@ -101,12 +152,29 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 			drawableCheck.setColorFilter(colors.get(pos), PorterDuff.Mode.SRC_IN);
 			holder.checkbox.setButtonDrawable(drawableCheck);
 		}
+		holder.textCount.setText(item.getCountInString());
 		holder.setClickListener(new ViewHolder.ClickListener() {
 			@Override
 			public void onClick(View view, int position) {
-				boolean selected = publishItems.get(position).isSelected();
-				publishItems.get(position).setSelected(!selected);
-				((CheckBox) view.findViewById(R.id.item_product_in_products_checkbox)).setChecked(!selected);
+				boolean newSelected = !publishItems.get(position).isSelected();
+				publishItems.get(position).setSelected(newSelected);
+				((CheckBox) view.findViewById(R.id.item_product_in_products_checkbox)).setChecked(newSelected);
+				if (newSelected){
+					view.findViewById(R.id.item_product_layout_count).setVisibility(View.VISIBLE);
+				} else{
+					view.findViewById(R.id.item_product_layout_count).setVisibility(View.GONE);
+				}
+			}
+		});
+		if (item.isSelected()){
+			holder.layoutCount.setVisibility(View.VISIBLE);
+		} else{
+			holder.layoutCount.setVisibility(View.GONE);
+		}
+		holder.setMinusClickListener(new ViewHolder.ClickListener() {
+			@Override
+			public void onClick(View view, int position) {
+				
 			}
 		});
 	}

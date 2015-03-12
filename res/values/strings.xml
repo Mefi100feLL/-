@@ -22,6 +22,11 @@
     <string name="action_filter">Фильтр</string>
     
     
+    <string name="action_send_as_sms">по SMS</string>
+    <string name="action_send_as_email">по email</string>
+    <string name="action_send_as_text">как текст</string>
+    
+    
     <string name="action_sort_by_abc">По алфавиту</string>
     <string name="action_sort_by_category">По категориям</string>
     <string name="action_sort_by_favorite">Избранные</string>

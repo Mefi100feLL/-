@@ -255,9 +255,8 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		editedItem = null;
 	}
 
-	public void sendItems(ArrayList<ListItem> selectedItems) {
-		// TODO Auto-generated method stub
-		
+	public void sendItems(int typeOfSending, ArrayList<ListItem> selectedItems) {
+		currentList.sendItems(context, typeOfSending, selectedItems);
 	}
 	/////////////////////////////////////////////////////////////// OPERATIONS WITH ITEMS //////////////////////////////////////////////////
 	

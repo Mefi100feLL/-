@@ -21,6 +21,7 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.Activities.MainActivity;
 import com.PopCorp.Purchases.Comparators.ListComparator;
 import com.PopCorp.Purchases.Controllers.ListController;
+import com.PopCorp.Purchases.Data.List;
 import com.PopCorp.Purchases.Data.ListItem;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> implements Filterable{
@@ -124,7 +125,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
 		@Override
 		public boolean onPrepareActionMode(ActionMode currentActionMode, Menu menu) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
@@ -132,6 +132,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		public void onDestroyActionMode(ActionMode currentActionMode) {
 			actionMode = null;
 			selectedItems.clear();
+			for (int i=0; i<publishItems.size(); i++){
+				notifyItemChanged(i);
+			}
 		}
 
 		@Override
@@ -152,9 +155,20 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 				controller.removeItems(selectedItems);
 				break;
 			}
-			case R.id.action_send_item : {
-				controller.sendItems(selectedItems);
+			case R.id.action_send_as_sms : {
+				controller.sendItems(List.TYPE_OF_SENDING_LIST_TO_SMS, selectedItems);
 				break;
+			}
+			case R.id.action_send_as_email : {
+				controller.sendItems(List.TYPE_OF_SENDING_LIST_TO_EMAIL, selectedItems);
+				break;
+			}
+			case R.id.action_send_as_text : {
+				controller.sendItems(List.TYPE_OF_SENDING_LIST_AS_TEXT, selectedItems);
+				break;
+			}
+			default : {
+				return true;
 			}
 			}
 			actionMode.finish();

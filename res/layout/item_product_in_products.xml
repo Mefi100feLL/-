@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
+    android:animateLayoutChanges="true"
     android:background="@drawable/selector_for_list"
     android:orientation="horizontal"
     android:paddingLeft="16dp"
@@ -9,11 +10,50 @@
 
     <CheckBox
         android:id="@+id/item_product_in_products_checkbox"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:clickable="false"
+        android:ellipsize="marquee"
         android:focusable="false"
-        android:paddingLeft="16dp" />
+        android:maxLines="1"
+        android:paddingLeft="16dp"
+        android:singleLine="true" />
+
+    <LinearLayout
+        android:id="@+id/item_product_layout_count"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="4dp"
+        android:gravity="center_vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/item_product_image_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_for_buttons"
+            android:padding="4dp"
+            android:src="@drawable/ic_minus" />
+
+        <TextView
+            android:id="@+id/item_product_edit_count"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <ImageView
+            android:id="@+id/item_product_image_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_for_buttons"
+            android:padding="4dp"
+            android:src="@drawable/ic_plus" />
+
+    </LinearLayout>
 
 </LinearLayout>
