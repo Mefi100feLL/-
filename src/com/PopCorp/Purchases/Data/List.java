@@ -263,6 +263,7 @@ public class List {
 				}
 			}
 			if (!finded){
+				item.remove(db);
 				iterator.remove();
 			}
 		}

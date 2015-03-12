@@ -44,7 +44,6 @@ public class ListItem implements Cloneable{
 		setComment(comment);
 		setImportant(important);
 		db.update(DB.TABLE_ITEMS, DB.COLUMNS_ITEMS_WITHOUT_DATELIST, DB.KEY_ID + "=" + getId(), getFields());
-		//to update in products table
 	}
 
 	public void changeBuyed(DB db){

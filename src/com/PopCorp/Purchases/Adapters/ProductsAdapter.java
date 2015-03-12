@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.ListIterator;
 
 import android.content.Context;
@@ -207,6 +208,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 						notifyItemRemoved(position);
 					}
 				}
+				HashMap<Product, Integer> oldPositions = new HashMap<Product, Integer>();
+				for (Product product : publishItems){
+					oldPositions.put(product, publishItems.indexOf(product));
+				}
 				ArrayList<Product> tmpItems = new ArrayList<Product>(newItems);
 				tmpItems.removeAll(publishItems);
 				publishItems.addAll(tmpItems);
@@ -217,10 +222,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 					Collections.sort(publishItems, new SortOnlyNames());
 				}
 
-				for (Product item : tmpItems){
+				for (Product item : publishItems){
 					int position = publishItems.indexOf(item);
 					if (position!=-1){
-						notifyItemInserted(position);
+						if (tmpItems.contains(item)){
+							notifyItemInserted(position);
+						} else{
+							notifyItemMoved(oldPositions.get(item), position);
+						}
 					}
 				}
 			}
