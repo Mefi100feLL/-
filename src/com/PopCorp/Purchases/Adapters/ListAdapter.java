@@ -313,6 +313,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 						notifyItemInserted(position);
 					}
 				}
+				updateEditedItem();
+			}
+
+			private void updateEditedItem() {
 				if (updatedItem!=null){
 					int newPosition = publishItems.indexOf(updatedItem);
 					if (oldPosition!=-1 && newPosition!=-1){

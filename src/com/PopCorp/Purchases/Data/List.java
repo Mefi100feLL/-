@@ -207,10 +207,19 @@ public class List {
 			}
 		}
 		long id = db.addRec(DB.TABLE_ITEMS, DB.COLUMNS_ITEMS, new String[] {getDatelist(), name, count, edizm, coast, category, shop, comment, buyed, important});
-		//// TODO Auto-generated method stub
-		//add item in all products with favorite=true
 		ListItem newItem = new ListItem(id, getDatelist(), name, count, edizm, coast, category, shop, comment, buyed, important);
 		items.add(newItem);
+		
+		Cursor cursor = db.getdata(DB.TABLE_ALL_ITEMS, DB.COLUMNS_ALL_ITEMS, DB.KEY_ALL_ITEMS_NAME + "='" + name + "'", null, null, null, null);
+		if (cursor!=null){
+			if (cursor.moveToFirst()){
+				db.update(DB.TABLE_ALL_ITEMS, DB.COLUMNS_ALL_ITEMS, DB.KEY_ALL_ITEMS_NAME + "='" + name + "'", new String[] {name, count, edizm, coast, category, shop, comment, "true"});
+				cursor.close();
+				return newItem;
+			}
+			cursor.close();
+		}
+		db.addRec(DB.TABLE_ALL_ITEMS, DB.COLUMNS_ALL_ITEMS, new String[] {name, count, edizm, coast, category, shop, comment, "true"});
 		return newItem;
 	}
 
@@ -262,6 +271,9 @@ public class List {
 			for (ListItem item : items){
 				if (item.getName().equals(product.getName())){
 					finded = true;
+					if (!item.getCountInString().equals(product.getCountInString())){
+						item.update(db, item.getName(), product.getCountInString(), item.getEdizm(), item.getCoastInString(), item.getCategory(), item.getShop(), item.getComment(), item.isImportantInString());
+					}
 				}
 			}
 			if (!finded){

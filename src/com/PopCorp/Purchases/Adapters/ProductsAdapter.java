@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.ListIterator;
 
 import android.content.Context;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -61,8 +59,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 		public ImageView buttonMinus;
 		public ImageView buttonPlus;
 		private ClickListener clickListener;
-		private ClickListener minusClickListener;
-		private ClickListener plusClickListener;
+		private ClickListener countClickListener;
 
 		public ViewHolder(View view) {
 			super(view);
@@ -81,7 +78,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 							count = count.subtract(new BigDecimal("1"));
 							textCount.setText(count.toString());
 						}
-						minusClickListener.onClick(v, getPosition());
+						countClickListener.onClick(textCount, getPosition());
 					} catch (Exception e){
 
 					}
@@ -94,7 +91,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 						BigDecimal count = new BigDecimal(textCount.getText().toString());
 						count = count.add(new BigDecimal("1"));
 						textCount.setText(count.toString());
-						plusClickListener.onClick(v, getPosition());
+						countClickListener.onClick(textCount, getPosition());
 					} catch(Exception e){
 
 					}
@@ -111,12 +108,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 			this.clickListener = clickListener;
 		}
 		
-		public void setMinusClickListener(ClickListener clickListener) {
-			this.minusClickListener = clickListener;
-		}
-		
-		public void setPlusClickListener(ClickListener clickListener) {
-			this.plusClickListener = clickListener;
+		public void setCountClickListener(ClickListener clickListener) {
+			this.countClickListener = clickListener;
 		}
 
 		@Override
@@ -166,17 +159,17 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 				}
 			}
 		});
+		holder.setCountClickListener(new ViewHolder.ClickListener() {
+			@Override
+			public void onClick(View view, int position) {
+				publishItems.get(position).setCount(((TextView) view).getText().toString());
+			}
+		});
 		if (item.isSelected()){
 			holder.layoutCount.setVisibility(View.VISIBLE);
 		} else{
 			holder.layoutCount.setVisibility(View.GONE);
 		}
-		holder.setMinusClickListener(new ViewHolder.ClickListener() {
-			@Override
-			public void onClick(View view, int position) {
-				
-			}
-		});
 	}
 
 	@Override
@@ -194,7 +187,17 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void publishResults(CharSequence constraint, FilterResults results) {
+				textViewEmpty.setText(textOfEmpty);
 				ArrayList<Product> newItems = (ArrayList<Product>) results.values;
+				if (publishItems.size()==newItems.size()){
+					if (constraint.equals(FILTER_TYPE_CATEGORIES)){
+						Collections.sort(publishItems, new SortOnlyCategories());
+					} else{
+						Collections.sort(publishItems, new SortOnlyNames());
+					}
+					notifyDataSetChanged();
+					return;
+				}
 				ListIterator<Product> iterator = publishItems.listIterator();
 				while (iterator.hasNext()){
 					Product item = iterator.next();
@@ -203,10 +206,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 						iterator.remove();
 						notifyItemRemoved(position);
 					}
-				}
-				HashMap<Product, Integer> oldPositions = new HashMap<Product, Integer>();
-				for (Product product : publishItems){
-					oldPositions.put(product, publishItems.indexOf(product));
 				}
 				ArrayList<Product> tmpItems = new ArrayList<Product>(newItems);
 				tmpItems.removeAll(publishItems);
@@ -218,19 +217,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 					Collections.sort(publishItems, new SortOnlyNames());
 				}
 
-				for (Product item : publishItems){
+				for (Product item : tmpItems){
 					int position = publishItems.indexOf(item);
 					if (position!=-1){
-						if (tmpItems.contains(item)){
-							notifyItemInserted(position);
-						} else{
-							if (oldPositions.get(item)!=position){
-								notifyItemMoved(oldPositions.get(item), position);
-							}
-						}
+						notifyItemInserted(position);
 					}
 				}
-				textViewEmpty.setText(textOfEmpty);
 			}
 
 			@Override
