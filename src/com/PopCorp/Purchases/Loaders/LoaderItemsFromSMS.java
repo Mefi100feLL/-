@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.SD;
@@ -20,6 +19,7 @@ public class LoaderItemsFromSMS extends AsyncTask<Void, Void, Boolean>{
 	
 	public interface CallbackForLoadingSMS{
 		public void onSMSLoaded(ArrayList<HashMap<String, String>> loadedSms);
+		public void showToast(int text);
 	}
 	
 	private MaterialDialog prdialog;
@@ -71,7 +71,7 @@ public class LoaderItemsFromSMS extends AsyncTask<Void, Void, Boolean>{
 		if (result){
 			callback.onSMSLoaded(mapsSMS);
 		} else{
-			Toast.makeText(context, R.string.toast_no_sms, Toast.LENGTH_SHORT).show();
+			callback.showToast(R.string.toast_no_sms);
 		}
 	}
 

@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData.Item;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -29,7 +30,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -55,6 +58,10 @@ import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadingSMS{
 
@@ -148,7 +155,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 			}
 		});
 		builder.setNegativeButton(R.string.dialog_cancel, null);
-		AlertDialog dialog = builder.create();
+		Dialog dialog = builder.create();
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
 	}
@@ -296,6 +303,11 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		refreshAll();
 	}
 	
+	@Override
+	public void showToast(int text){
+		SnackbarManager.show(Snackbar.with(context.getApplicationContext()).text(text), layoutForSnackBar);
+	}
+	
 	
 	
 	
@@ -364,7 +376,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 				currentList.send(context, List.TYPES_OF_SENDING_LIST[which]);
 			}
 		});
-		AlertDialog dialog = builder.create();
+		Dialog dialog = builder.create();
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
 	}
@@ -374,16 +386,60 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.dialog_set_alert, null);
 		
-		final TimePicker timePicker = (TimePicker) layout.findViewById(R.id.dialog_set_alarm_timepicker);
-		timePicker.setIs24HourView(true);
-		final DatePicker datePicker = (DatePicker) layout.findViewById(R.id.dialog_set_alarm_datepicker);
-		Calendar date = Calendar.getInstance();
-		if (!currentList.getAlarm().equals("")){
+		final Calendar date = Calendar.getInstance();
+		
+		final Button dateText = (Button) layout.findViewById(R.id.dialog_alert_date);
+		final Button time = (Button) layout.findViewById(R.id.dialog_alert_time);
+		time.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Calendar now = Calendar.getInstance();
+				TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener(){
+					@Override
+					public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+						date.set(Calendar.HOUR_OF_DAY, hourOfDay);
+						date.set(Calendar.MINUTE, minute);
+						time.setText(new SimpleDateFormat("HH:mm").format(date.getTime()));
+					}
+				};
+                TimePickerDialog tpd = TimePickerDialog.newInstance(
+                		timeListener,
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        true
+                );
+                tpd.setThemeDark(false);
+                tpd.show(context.getFragmentManager(), "Timepickerdialog");
+			}
+		});
+		dateText.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Calendar now = Calendar.getInstance();
+				OnDateSetListener timeListener = new OnDateSetListener(){
+					@Override
+					public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+						date.set(year, monthOfYear, dayOfMonth);
+						dateText.setText(new SimpleDateFormat("dd.MM.yyyy").format(date.getTime()));
+					}
+				};
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                		timeListener,
+                		now.get(Calendar.YEAR),
+                		now.get(Calendar.MONTH),
+                		now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(context.getFragmentManager(), "Datepickerdialog");
+			}
+		});
+		
+		
+		if (!currentList.getAlarm().isEmpty()){
 			SimpleDateFormat formatter = new SimpleDateFormat(List.FORMAT_FOR_DATE_ALARM);
 			try {
 				date.setTime(formatter.parse(currentList.getAlarm()));
 			} catch (ParseException e) {
-				date = Calendar.getInstance();
+				
 			}
 			
 			builder.setNeutralButton(R.string.dialog_alarm_remove, new DialogInterface.OnClickListener() {
@@ -393,25 +449,21 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 				}
 			});
 		}
-		timePicker.setCurrentHour(date.get(Calendar.HOUR_OF_DAY));
-		timePicker.setCurrentMinute(date.get(Calendar.MINUTE));
-		
-		datePicker.updateDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
+		time.setText(new SimpleDateFormat("HH:mm").format(date.getTime()));
+		dateText.setText(new SimpleDateFormat("dd.MM.yyyy").format(date.getTime()));
 		
 		builder.setTitle(R.string.dialog_title_alarm);
 		builder.setView(layout);
 		builder.setPositiveButton(R.string.dialog_alarm_set, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
-				currentList.setAlarm(db, context, calendar.getTime());
+				currentList.setAlarm(db, context, date.getTime());
 			}
 		});
 		
 		builder.setNegativeButton(R.string.dialog_cancel, null);
 
-		final AlertDialog dialog = builder.create();
+		final Dialog dialog = builder.create();
 
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
@@ -446,7 +498,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 			}
 		});
 		builder.setNegativeButton(context.getResources().getString(R.string.dialog_cancel), null);
-		final AlertDialog dialog =builder.create();
+		final Dialog dialog =builder.create();
 
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -555,7 +607,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 			}
 		});
 		builder.setNegativeButton(R.string.dialog_cancel, null);
-		final AlertDialog dialog = builder.create();
+		final Dialog dialog = builder.create();
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
 	}
