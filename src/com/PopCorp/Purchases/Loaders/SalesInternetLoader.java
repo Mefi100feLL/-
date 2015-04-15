@@ -12,18 +12,17 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.PopCorp.Purchases.Data.Sale;
-import com.PopCorp.Purchases.Data.Shop;
 import com.PopCorp.Purchases.Utilites.InternetConnection;
 
 public class SalesInternetLoader extends AsyncTaskLoader<ArrayList<Sale>> {
 
-	private Shop shop;
+	private String shop;
 	private String cityId;
 	private Context context;
 	private ArrayList<ArrayList<String>> prodCats;
 	private ArrayList<ArrayList<String>> promCats;
 
-	public SalesInternetLoader(Context ctx, Bundle args, Shop shop) {
+	public SalesInternetLoader(Context ctx, Bundle args, String shop) {
 		super(ctx);
 		context = ctx;
 		this.shop = shop;
@@ -41,7 +40,7 @@ public class SalesInternetLoader extends AsyncTaskLoader<ArrayList<Sale>> {
 
 		for (int page = 1; page < countOfPages + 1; page++) {
 			try {
-				connection = new InternetConnection("http://mestoskidki.ru/view_shop.php?city=" + cityId + "&shop=" + shop.getId() + "&page=" + String.valueOf(page));
+				connection = new InternetConnection("http://mestoskidki.ru/view_shop.php?city=" + cityId + "&shop=" + shop + "&page=" + String.valueOf(page));
 				allpage = connection.getPageInStringBuilder();
 			} catch(IOException e){
 				//show error: no internet
@@ -117,7 +116,7 @@ public class SalesInternetLoader extends AsyncTaskLoader<ArrayList<Sale>> {
 				continue;
 			}
 			
-			Sale sale = new Sale(-1, linksSale.get(pageSale), title, subTitle, coast, count, coastFor, imageUrl, imageId, shop.getId(), category, period[0], period[1]);
+			Sale sale = new Sale(-1, linksSale.get(pageSale), title, subTitle, coast, count, coastFor, imageUrl, imageId, shop, category, period[0], period[1]);
 			result.add(sale);
 		}
 		return result;
@@ -127,7 +126,7 @@ public class SalesInternetLoader extends AsyncTaskLoader<ArrayList<Sale>> {
 		InternetConnection connection = null;
 		StringBuilder allpage = null;
 		try {
-			connection = new InternetConnection("http://mestoskidki.ru/view_shop.php?city=" + cityId + "&shop=" + shop.getId());
+			connection = new InternetConnection("http://mestoskidki.ru/view_shop.php?city=" + cityId + "&shop=" + shop);
 			allpage = connection.getPageInStringBuilder();
 		} catch(IOException e){
 			return 1;

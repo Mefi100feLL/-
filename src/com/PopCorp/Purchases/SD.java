@@ -19,4 +19,6 @@ public class SD {
 	public static final String SMS_KEY_DATE = "date";
 	public static final String SMS_KEY_BODY = "body";
 	public static final String SMS_KEY_CHECKED = "checked";
+	
+	public static final String BASE_URL = "http://mestoskidki.ru/";
 }

@@ -114,7 +114,10 @@ public class Product implements Parcelable{
 		selected = true;
 	}
 	
-	
+	@Override
+	public String toString(){
+		return name;
+	}
 	
 	
 	////////////////////////////////////// SETTERS AND GETTERS /////////////////////////////////////////

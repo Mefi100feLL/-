@@ -2,14 +2,10 @@ package com.PopCorp.Purchases.Fragments;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -24,7 +20,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,8 +28,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -42,7 +38,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.SD;
@@ -52,7 +47,6 @@ import com.PopCorp.Purchases.Controllers.ListController;
 import com.PopCorp.Purchases.Controllers.MenuController;
 import com.PopCorp.Purchases.Data.ListItem;
 import com.PopCorp.Purchases.Data.Product;
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.shamanland.fab.FloatingActionButton;
 import com.shamanland.fab.ShowHideOnScroll;
 
@@ -70,7 +64,7 @@ public class ListFragment extends Fragment{
 
 	private RecyclerView listView;
 	private LinearLayout layoutWithFields;
-	private EditText editTextForName;
+	private AutoCompleteTextView editTextForName;
 	private EditText editTextForCount;
 	private Spinner spinnerForEdizm;
 	private EditText editTextForCoast;
@@ -125,7 +119,7 @@ public class ListFragment extends Fragment{
 		buttonForVoice = (ImageView) rootView.findViewById(R.id.fragment_list_button_for_voice);
 		listView = (RecyclerView) rootView.findViewById(R.id.fragment_list_listview);
 		layoutWithFields = (LinearLayout) rootView.findViewById(R.id.fragment_list_fields_layout);
-		editTextForName = (EditText) rootView.findViewById(R.id.fragment_list_edittext_for_name);
+		editTextForName = (AutoCompleteTextView) rootView.findViewById(R.id.fragment_list_edittext_for_name);
 		editTextForCount = (EditText) rootView.findViewById(R.id.fragment_list_edittext_for_count);
 		spinnerForEdizm = (Spinner) rootView.findViewById(R.id.fragment_list_spinner_for_edizm);
 		editTextForCoast = (EditText) rootView.findViewById(R.id.fragment_list_edittext_for_coast);
@@ -147,6 +141,7 @@ public class ListFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				if (layoutWithFields.getVisibility() == View.GONE){
+					clearFields();
 					layoutWithFields.setVisibility(View.VISIBLE);
 				} else {
 					if (!editTextForName.getText().toString().isEmpty()){
@@ -248,6 +243,8 @@ public class ListFragment extends Fragment{
 		return rootView;
 	}
 
+	
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -507,5 +504,21 @@ public class ListFragment extends Fragment{
 
 	public void showFloatingButton(){
 		showHideOnScroll.onScrollDown();
+	}
+
+
+
+	public void setAutoCompleteAdapter() {
+		editTextForName.setAdapter(controller.getAdapterWithProducts());
+		editTextForName.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ListItem item = controller.getSelectedItem(position);
+				if (item!=null){
+					putItemInFields(item);
+					item = null;
+				}
+			}
+		});
 	}
 }

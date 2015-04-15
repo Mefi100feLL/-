@@ -144,16 +144,17 @@ public class DB {
 			"( " + KEY_ID + " integer primary key autoincrement, " + KEY_CITY_NAME + " text, " + KEY_CITY_ID + " integer);";
 
 	///////////////////////////////////////////////////////////// SHOPES //////////////////////////////////////////////////////
-	public static final String KEY_SHOP_NAME = "name";
-	public static final String KEY_SHOP_ID = "id";
 	public static final String KEY_SHOP_CITY_ID = "id_city";
+	public static final String KEY_SHOP_ID = "id";
+	public static final String KEY_SHOP_NAME = "name";
+	public static final String KEY_SHOP_IMAGE_URL = "image_url";
 
-	public static final String[] COLUMNS_SHOPES = new String[] {KEY_SHOP_NAME, KEY_SHOP_ID};
+	public static final String[] COLUMNS_SHOPES = new String[] {KEY_SHOP_ID, KEY_SHOP_NAME, KEY_SHOP_IMAGE_URL};
 
-	public static final String[] COLUMNS_SHOPES_WITH_CITY_ID = new String[] {KEY_SHOP_NAME, KEY_SHOP_ID, KEY_SHOP_CITY_ID};
+	public static final String[] COLUMNS_SHOPES_WITH_CITY_ID = new String[] {KEY_SHOP_CITY_ID , KEY_SHOP_ID, KEY_SHOP_NAME, KEY_SHOP_IMAGE_URL};
 
 	public static final String CREATE_TABLE_SHOPES = "CREATE TABLE IF NOT EXISTS " + TABLE_SHOPES + 
-			"( " + KEY_ID + " integer primary key autoincrement, " + KEY_SHOP_NAME + " text, " + KEY_SHOP_ID + " integer, " + KEY_SHOP_CITY_ID + " integer);";
+			"( " + KEY_ID + " integer primary key autoincrement, " + KEY_SHOP_CITY_ID + " integer, " + KEY_SHOP_ID + " integer, " + KEY_SHOP_NAME + " text, " + KEY_SHOP_IMAGE_URL + " text);";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static final String DB_NAME = "PopCorp.Purchases.DB";

@@ -31,6 +31,8 @@ import com.PopCorp.Purchases.Adapters.NavigationListAdapter;
 import com.PopCorp.Purchases.Data.List;
 import com.PopCorp.Purchases.Fragments.ListFragment;
 import com.PopCorp.Purchases.Fragments.MenuFragment;
+import com.PopCorp.Purchases.Fragments.SalesFragment;
+import com.PopCorp.Purchases.Fragments.ShopesFragment;
 
 public class MainActivity extends ActionBarActivity{
 
@@ -54,7 +56,6 @@ public class MainActivity extends ActionBarActivity{
 	    
 	    drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolBar, R.string.app_name, R.string.app_name);
 	    drawerLayout.setDrawerListener(drawerToggle);
-	    
 	    navigationItems = getResources().getStringArray(R.array.navigation_menu_items);
 	    
 	    navigationLayout = (LinearLayout) findViewById(R.id.activity_main_navigation_layout);
@@ -141,6 +142,11 @@ public class MainActivity extends ActionBarActivity{
 	    	((ListFragment) findedFragment).onBackPressed();
 	    	return;
 	    }
+	    findedFragment = fragmentManager.findFragmentByTag(SalesFragment.TAG);
+	    if (findedFragment!=null){
+	    	((SalesFragment) findedFragment).onBackPressed();
+	    	return;
+	    }
 	    super.onBackPressed();
 	}
 	
@@ -156,8 +162,8 @@ public class MainActivity extends ActionBarActivity{
 			String tag = null;
 			switch (position) {
 			case 0 : {
-				fragment = new MenuFragment();
-				tag = MenuFragment.TAG;
+				fragment = new ShopesFragment();
+				tag = ShopesFragment.TAG;
 				break;
 			}
 			case 1 : {

@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/selector_for_list"
+    android:gravity="center"
     android:orientation="vertical" >
 
-    <GridView
-        android:id="@+id/activity_sales_gridview"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/shop_imageview"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numColumns="2" >
-    </GridView>
+        android:padding="16dp"
+        android:scaleType="fitCenter" />
 
 </LinearLayout>

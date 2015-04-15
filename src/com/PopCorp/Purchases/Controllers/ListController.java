@@ -5,13 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ClipData.Item;
 import android.content.ClipboardManager;
@@ -21,6 +19,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -29,15 +28,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.SD;
@@ -79,6 +76,10 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 
 	private ViewGroup layoutForSnackBar;
 	
+	private ArrayList<String> allProducts = new ArrayList<String>();
+	private ArrayAdapter<String> adapterWithProducts;
+	private Handler handler = new Handler();
+	
 	private ArrayList<String> shopsForFilter = new ArrayList<String>();
 	private String filterShop = "";
 	
@@ -93,6 +94,10 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		db = new DB(context);
 		openDB();
 		
+		Thread th = new Thread(null, loadAll, "loadAll");
+		th.setPriority(10);
+		th.setDaemon(true);
+		th.start();
 		openList(datelist);
 		Collections.sort(currentList.getItems(), new ListComparator());
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
@@ -107,9 +112,33 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		openDB();
 		
 		createListFromJSON(json);
+		
 		Collections.sort(currentList.getItems(), new ListComparator());
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
 	}
+	
+	Runnable loadAll = new Runnable() {
+		@Override
+		public void run() {
+			Cursor cursorWithAllProducts = db.getdata(DB.TABLE_ALL_ITEMS, new String[] {DB.KEY_ALL_ITEMS_NAME}, null, null, null, null, null);
+			if (cursorWithAllProducts!=null){
+				if (cursorWithAllProducts.moveToFirst()){
+					allProducts.add(cursorWithAllProducts.getString(cursorWithAllProducts.getColumnIndex(DB.KEY_ALL_ITEMS_NAME)));
+					while (cursorWithAllProducts.moveToNext()){
+						allProducts.add(cursorWithAllProducts.getString(cursorWithAllProducts.getColumnIndex(DB.KEY_ALL_ITEMS_NAME)));
+					}
+				}
+				cursorWithAllProducts.close();
+			}
+			
+			setAdapterWithProducts(new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, allProducts.toArray(new String[] {})));
+			handler.post(new Runnable() {
+				public void run() {
+					fragment.setAutoCompleteAdapter();
+				}
+			});
+		}
+	};
 	
 	private void openList(String datelist){
 		Cursor cursor = db.getdata(DB.TABLE_LISTS, DB.COLUMNS_LISTS_WITH_ID, DB.KEY_LISTS_DATELIST + "='" + datelist + "'", null, null, null, null);
@@ -300,6 +329,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	
 	public void updateArray(ArrayList<Product> newArray){
 		currentList.updateItems(db, newArray);
+		adapter.notifyItemRangeChanged(0, adapter.getPublishItems().size());
 		refreshAll();
 	}
 	
@@ -660,6 +690,27 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 			cursor.close();
 		}
 		result.add(context.getResources().getColor(android.R.color.transparent));
+		return result;
+	}
+
+	public ArrayAdapter<String> getAdapterWithProducts() {
+		return adapterWithProducts;
+	}
+
+	public void setAdapterWithProducts(ArrayAdapter<String> adapter) {
+		adapterWithProducts = adapter;
+	}
+
+	public ListItem getSelectedItem(int position) {
+		ListItem result = null;
+		Cursor cursor = db.getdata(DB.TABLE_ALL_ITEMS, null, DB.KEY_ALL_ITEMS_NAME + "='" + adapterWithProducts.getItem(position) + "'", null, null, null, null);
+		if (cursor!=null){
+			if (cursor.moveToFirst()){
+				Product tmpProduct = new Product(cursor);
+				result = new ListItem(0, "", tmpProduct.getName(), tmpProduct.getCountInString(), tmpProduct.getEdizm(), tmpProduct.getCoastInString(), tmpProduct.getCategory(), tmpProduct.getShop(), tmpProduct.getComment(), "false", "false");
+			}
+			cursor.close();
+		}
 		return result;
 	}
 }

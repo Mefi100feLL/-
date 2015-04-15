@@ -60,7 +60,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>{
 		
 		@Override
 		public void onClick(View v) {
-			clickListener.onClick(v, getPosition());
+			clickListener.onClick(v, getAdapterPosition());
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.ListIterator;
 
@@ -27,6 +28,7 @@ import android.text.Spanned;
 import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.Comparators.ListComparator;
 import com.PopCorp.Purchases.DataBase.DB;
 import com.PopCorp.Purchases.Receivers.AlarmReceiver;
 import com.PopCorp.Purchases.Utilites.EllipsizeLineSpan;
@@ -509,5 +511,9 @@ public class List {
 			result.add(newProduct);
 		}
 		return result;
+	}
+
+	public void sort() {
+		Collections.sort(items, new ListComparator());
 	}
 }

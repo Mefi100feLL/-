@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.ListIterator;
 
 import android.content.Context;
@@ -79,7 +78,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 							count = count.subtract(new BigDecimal("1"));
 							textCount.setText(count.toString());
 						}
-						countClickListener.onClick(textCount, getPosition());
+						countClickListener.onClick(textCount, getAdapterPosition());
 					} catch (Exception e){
 
 					}
@@ -92,7 +91,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 						BigDecimal count = new BigDecimal(textCount.getText().toString());
 						count = count.add(new BigDecimal("1"));
 						textCount.setText(count.toString());
-						countClickListener.onClick(textCount, getPosition());
+						countClickListener.onClick(textCount, getAdapterPosition());
 					} catch(Exception e){
 
 					}
@@ -115,7 +114,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
 		@Override
 		public void onClick(View v) {
-			clickListener.onClick(v, getPosition());
+			clickListener.onClick(v, getAdapterPosition());
 		}
 	}
 
@@ -190,27 +189,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 			protected void publishResults(CharSequence constraint, FilterResults results) {
 				textViewEmpty.setText(textOfEmpty);
 				ArrayList<Product> newItems = (ArrayList<Product>) results.values;
-				if (publishItems.size()==newItems.size()){
-					if (constraint.equals(FILTER_TYPE_CATEGORIES)){
-						Collections.sort(publishItems, new SortOnlyCategories());
-					} else{
-						Collections.sort(publishItems, new SortOnlyNames());
-					}
-					notifyDataSetChanged();
-					return;
-				}
 				ListIterator<Product> iterator = publishItems.listIterator();
 				while (iterator.hasNext()){
 					Product item = iterator.next();
 					if (!newItems.contains(item)){
-						int position = publishItems.indexOf(item);
 						iterator.remove();
-						notifyItemRemoved(position);
 					}
-				}
-				HashMap<Product, Integer> oldPositions = new HashMap<Product, Integer>();
-				for (Product product : publishItems){
-					oldPositions.put(product, publishItems.indexOf(product));
 				}
 				ArrayList<Product> tmpItems = new ArrayList<Product>(newItems);
 				tmpItems.removeAll(publishItems);
@@ -221,17 +205,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 				} else{
 					Collections.sort(publishItems, new SortOnlyNames());
 				}
-
-				for (Product item : publishItems){
-					int position = publishItems.indexOf(item);
-					if (position!=-1){
-						if (tmpItems.contains(item)){
-							notifyItemInserted(position);
-						} else{
-							notifyItemMoved(oldPositions.get(item), position);
-						}
-					}
-				}
+				notifyDataSetChanged();
 			}
 
 			@Override

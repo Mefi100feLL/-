@@ -5,6 +5,9 @@
     <string name="hello_world">Hello world!</string>
     
     
+    <string name="menu_sales">Акции</string>
+    
+    
     <string name="action_new_list">Создать список</string>
     <string name="action_sales">Акции</string>
     <string name="action_sort">Сортировка</string>

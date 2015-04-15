@@ -97,13 +97,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
 		@Override
 		public boolean onLongClick(View v) {
-			clickListener.onClick(v, getPosition(), true);
+			clickListener.onClick(v, getAdapterPosition(), true);
 			return true;
 		}
 
 		@Override
 		public void onClick(View v) {
-			clickListener.onClick(v, getPosition(), false);
+			clickListener.onClick(v, getAdapterPosition(), false);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 			}
 		});
 		if (item.isBuyed()){
-			holder.name.setPaintFlags(holder.name.getPaintFlags() | Paint .STRIKE_THRU_TEXT_FLAG|Paint.FAKE_BOLD_TEXT_FLAG);
+			holder.name.setPaintFlags(holder.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG| Paint.FAKE_BOLD_TEXT_FLAG);
 			((ViewGroup) holder.view).getChildAt(0).setAlpha(0.3f);
 		} else {
 			holder.name.setPaintFlags(Paint.LINEAR_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);

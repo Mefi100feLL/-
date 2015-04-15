@@ -152,7 +152,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		int newPosition = lists.indexOf(editedList);
 		if (oldPosition != newPosition){
 			adapter.notifyItemMoved(oldPosition, newPosition);
-			mLayoutManager.scrollToPosition(newPosition);
+			mLayoutManager.scrollToPosition(0);
 		}
 	}
 
@@ -176,7 +176,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 							lists.add(removedList);
 							Collections.sort(lists, new MenuComparator());
 							adapter.notifyItemInserted(lists.indexOf(removedList));
-							mLayoutManager.scrollToPosition(lists.indexOf(removedList));
+							mLayoutManager.scrollToPosition(0);
 							removedList = null;
 						}
 					}
@@ -419,6 +419,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 
 	private void addListFromCursor(Cursor cursor){
 		List newList = new List(db, cursor);
+		newList.sort();
 		lists.add(newList);
 	}
 
