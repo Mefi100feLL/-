@@ -3,8 +3,8 @@ package com.PopCorp.Purchases.Fragments;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.Loader;
+import android.app.Fragment;
+import android.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -61,7 +61,7 @@ public class MenuFragment extends Fragment{
 		layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
 		
 		controller = new MenuController((ActionBarActivity) context, layoutForSnackBar, layoutManager);
-		controller.firstStart();
+		//controller.firstStart();
 		
 		floatingButton.setOnClickListener(new OnClickListener(){
 			@Override

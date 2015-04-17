@@ -21,8 +21,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -484,7 +484,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		
 		builder.setTitle(R.string.dialog_title_alarm);
 		builder.setView(layout);
-		builder.setPositiveButton(R.string.dialog_alarm_set, new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.dialog_save, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				currentList.setAlarm(db, context, date.getTime());

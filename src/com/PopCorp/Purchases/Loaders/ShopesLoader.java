@@ -2,7 +2,7 @@ package com.PopCorp.Purchases.Loaders;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.content.CursorLoader;
+import android.content.CursorLoader;
 
 import com.PopCorp.Purchases.DataBase.DB;
 

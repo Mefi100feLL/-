@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.AsyncTaskLoader;
+import android.content.AsyncTaskLoader;
 
 import com.PopCorp.Purchases.Data.Sale;
 import com.PopCorp.Purchases.Utilites.InternetConnection;

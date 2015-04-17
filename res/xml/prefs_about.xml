@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="program"
+    android:persistent="false"
+    android:title="@string/prefs_program" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="displaynooff"
+        android:title="@string/prefs_display_no_off" />
+
+    <Preference
+        android:key="about"
+        android:title="@string/prefs_about" />
+
+</PreferenceScreen>

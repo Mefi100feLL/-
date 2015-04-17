@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 
 import com.PopCorp.Purchases.R;
@@ -99,7 +99,7 @@ public class ShopesController implements LoaderCallbacks<Cursor>{
 		args.putString(SalesFragment.CURRENT_SHOP_ID_TO_SALES_FRAGMENT, shopes.get(position).getId());
 		args.putString(SalesFragment.CURRENT_SHOP_NAME_TO_SALES_FRAGMENT, shopes.get(position).getName());
 		fragment.setArguments(args);
-		FragmentManager fragmentManager = context.getSupportFragmentManager();
+		FragmentManager fragmentManager = context.getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(R.id.content_frame, fragment, SalesFragment.TAG).commit();
 	}

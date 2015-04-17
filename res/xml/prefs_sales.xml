@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="sale"
+    android:persistent="false"
+    android:title="@string/prefs_sales" >
+
+    <Preference
+        android:key="city"
+        android:title="@string/prefs_region" />
+
+</PreferenceScreen>

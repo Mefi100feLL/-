@@ -46,10 +46,6 @@
 		<id>8</id>
 	</city>
 	<city>
-		<name>Калининградская область</name>
-		<id>12</id>
-	</city>
-	<city>
 		<name>Калужская область</name>
 		<id>10</id>
 	</city>
@@ -174,6 +170,10 @@
 		<id>34</id>
 	</city>
 	<city>
+		<name>Ханты-мансийский АО</name>
+		<id>59</id>
+	</city>
+	<city>
 		<name>Челябинская область</name>
 		<id>36</id>
 	</city>
@@ -190,6 +190,10 @@
 		<id>35</id>
 	</city>
 	<city>
+		<name>Республика Кабардино-Балкария</name>
+		<id>60</id>
+	</city>
+	<city>
 		<name>Республика Калмыкия</name>
 		<id>46</id>
 	</city>
@@ -200,6 +204,10 @@
 	<city>
 		<name>Республика Карелия</name>
 		<id>42</id>
+	</city>
+	<city>
+		<name>Республика Коми</name>
+		<id>61</id>
 	</city>
 	<city>
 		<name>Республика Марий Эл</name>

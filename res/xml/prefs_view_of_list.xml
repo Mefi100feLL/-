@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        android:key="style"
+        android:title="@string/prefs_view_of_list"
+        android:persistent="false">
+        
+        <CheckBoxPreference
+			android:key="replacebuyed"
+			android:title="@string/prefs_replace_buyed"
+			android:defaultValue="true" 
+			android:summary="@string/prefs_replace_buyed_to_end"/>
+        
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+			android:key="sortlistitem"
+			android:summary="@string/prefs_default_sort"
+			android:title="@string/prefs_sort_list"
+			android:entries="@array/sortarray"
+			android:entryValues="@array/sortarray"
+			android:defaultValue="@string/prefs_default_sort_listitem"/>
+        
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+			android:key="listsize"
+			android:summary="@string/prefs_text_size_summary"
+			android:title="@string/prefs_text_size"
+			android:entries="@array/sizes"
+			android:entryValues="@array/sizes"
+			android:defaultValue="14" />
+        
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+			android:key="listsizesmall"
+			android:summary="@string/prefs_text_size_summary_small"
+			android:title="@string/prefs_text_size_small"
+			android:entries="@array/sizes"
+			android:entryValues="@array/sizes"
+			android:defaultValue="12" />
+        
+        <CheckBoxPreference
+			android:key="showcategories"
+			android:title="@string/prefs_show_categories"
+			android:defaultValue="true"/>
+		
+		<Preference
+			android:key="categories"
+			android:title="@string/prefs_categories_of_products"/>
+        
+    </PreferenceScreen>

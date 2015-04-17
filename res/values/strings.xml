@@ -6,6 +6,9 @@
     
     
     <string name="menu_sales">Акции</string>
+    <string name="menu_lists">Списки</string>
+    <string name="menu_map">Карта</string>
+    <string name="menu_settings">Настройки</string>
     
     
     <string name="action_new_list">Создать список</string>
@@ -66,10 +69,13 @@
 	
 	<string name="dialog_currency">Валюта: </string>
 	<string name="dialog_new_list">Имя списка</string>
+	<string name="dialog_select_list">Выбор списков</string>
 	<string name="dialog_create">СОЗДАТЬ</string>
+	<string name="dialog_send">ОТПРАВИТЬ</string>
 	<string name="dialog_add">ДОБАВИТЬ</string>
 	<string name="dialog_cancel">ОТМЕНА</string>
 	<string name="dialog_change">ИЗМЕНИТЬ</string>
+	<string name="dialog_select">ВЫБРАТЬ</string>
 	<string name="dialog_select_sms">Выберите SMS</string>
 	<string name="dialog_reading_sms">Загрузка SMS</string>
 	<string name="dialog_title_new_list">Новый список</string>
@@ -78,13 +84,27 @@
 	<string name="dialog_title_remove_list">Удаление списка</string>
 	<string name="dialog_title_send_list">Отправить список:</string>
 	<string name="dialog_remove">УДАЛИТЬ</string>
-	<string name="dialog_alarm_set">СОХРАНИТЬ</string>
+	<string name="dialog_save">СОХРАНИТЬ</string>
 	<string name="dialog_alarm_remove">УДАЛИТЬ</string>
+	<string name="dialog_in_list">В СПИСОК</string>
 	<string name="dialog_enter_new_unit_name">Единица измерения</string>
 	<string name="dialog_are_you_sure_to_remove_list">Вы уверены, что хотите удалить список?</string>
+	<string name="dialog_no_lists">Нет списков</string>
+	<string name="dialog_are_create_new_list">Создать новый список?</string>
+	<string name="dialog_name_of_category">Наименование категории</string>
+	
 	
 	<string name="string_no_shop">Нет магазина</string>
 	<string name="string_no_category">Нет категории</string>
+	<string name="string_add_currency">Добавить валюту</string>
+	<string name="string_new_currency">Новая валюта</string>
+	<string name="string_currency_name">Наименование валюты</string>
+	<string name="string_new_shop">Новый магазин</string>
+	<string name="string_editing_shop">Редактирование магазина</string>
+	<string name="string_shop_name">Наименование магазина</string>
+	<string name="string_add_unit">Добавить ед. измерения</string>
+	<string name="string_new_unit">Новая ед. измерения</string>
+	<string name="string_unit_name">Наименование ед. измерения</string>
 	<string name="string_category">Категория</string>
 	<string name="string_po">по</string>
 	<string name="string_lists">Списки</string>
@@ -100,6 +120,10 @@
 	<string name="string_coast_za_ed">Цена за</string>
 	<string name="string_list_of_products_clear">Список товаров пуст</string>
 	<string name="string_list_of_favorite_clear">Нет избранных</string>
+	<string name="string_coast_za">за</string>
+	<string name="string_in_shop">в</string>
+	<string name="string_cancel">Отмена</string>
+	<string name="string_ok">OK</string>
 	
 	<string name="string_all_products">Все товары</string>
 	
@@ -107,9 +131,9 @@
 	<string name="default_unit_one">шт</string>
 	<string name="default_unit_two">кг</string>
 	
-	<string name="prefs_default_currency">RUB</string>
-	<string name="prefs_two_currency">USD</string>
-	<string name="prefs_three_currency">EUR</string>
+	<string name="default_one_currency">RUB</string>
+	<string name="default_two_currency">USD</string>
+	<string name="default_three_currency">EUR</string>
 	
 	<string name="categ1">Мясные и рыбные продукты</string>
 	<string name="categ2">Овощи, фрукты, ягоды</string>
@@ -117,5 +141,38 @@
 	<string name="categ4">Бакалея</string>
 	<string name="categ5">Бытовые товары</string>
 	<string name="categ6">Другое</string>
+	
+	
+	<string name="prefs_view_of_list">Вид списка</string>
+	<string name="prefs_replace_buyed">Купленный в конец</string>
+	<string name="prefs_replace_buyed_to_end">Перемещать купленный товар в конец списка</string>
+	<string name="prefs_sort_list">Сортировать список</string>
+	<string name="prefs_default_sort">Текущая сортировка -</string>
+	<string name="prefs_text_size">Основной шрифт</string>
+	<string name="prefs_text_size_summary">Размер названия товара - </string>
+	<string name="prefs_text_size_small">Второстепенный шрифт</string>
+	<string name="prefs_text_size_summary_small">Размер свойств товара - </string>
+	<string name="prefs_show_categories">Показывать категории</string>
+	<string name="prefs_categories_of_products">Категории продуктов</string>
+	
+	<string name="prefs_functions_of_list">Функции списка</string>
+	<string name="prefs_currency">Валюты</string>
+	<string name="prefs_default_currency">Валюта по-умолчанию - </string>
+	<string name="prefs_unit">Единицы измерения</string>
+	<string name="prefs_default_unit">Единица по-умолчанию - </string>
+	<string name="prefs_shops">Магазины</string>
+	
+	<string name="prefs_sales">Акции</string>
+	<string name="prefs_region">Регион</string>
+	<string name="prefs_select_shops">Магазины</string>
+	<string name="prefs_prod_categ">Категории продтоваров</string>
+	<string name="prefs_prom_categ">Категории промтоваров</string>
+	
+	<string name="prefs_program">Программа</string>
+	<string name="prefs_display_no_off">Не гасить экран</string>
+	<string name="prefs_about">О программе</string>	
+	
+	
+	<string name="prefs_default_sort_listitem">по алфавиту (А-Я)</string>	
     
 </resources>

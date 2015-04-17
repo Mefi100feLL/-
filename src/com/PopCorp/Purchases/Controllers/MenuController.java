@@ -5,18 +5,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ClipData.Item;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,11 +28,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
@@ -40,17 +38,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.SD;
 import com.PopCorp.Purchases.Adapters.MenuAdapter;
+import com.PopCorp.Purchases.Comparators.MenuComparator;
 import com.PopCorp.Purchases.Data.List;
 import com.PopCorp.Purchases.DataBase.DB;
 import com.PopCorp.Purchases.Fragments.ListFragment;
@@ -58,7 +54,6 @@ import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS;
 import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS.CallbackForLoadingSMS;
 import com.PopCorp.Purchases.Loaders.MenuLoader;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
@@ -137,7 +132,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		args.putString(ListFragment.INTENT_TO_LIST_TITLE, title);
 		args.putString(ListFragment.INTENT_TO_LIST_DATELIST, datelist);
 		fragment.setArguments(args);
-		FragmentManager fragmentManager = context.getSupportFragmentManager();
+		FragmentManager fragmentManager = context.getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(R.id.content_frame, fragment, ListFragment.TAG).commit();
 	}
@@ -370,7 +365,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		
 		builder.setTitle(R.string.dialog_title_alarm);
 		builder.setView(layout);
-		builder.setPositiveButton(R.string.dialog_alarm_set, new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.dialog_save, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				lists.get(position).setAlarm(db, context, date.getTime());
@@ -421,13 +416,6 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		List newList = new List(db, cursor);
 		newList.sort();
 		lists.add(newList);
-	}
-
-	private class MenuComparator implements Comparator<List>{
-		@Override
-		public int compare(List oneList, List twoList) {
-			return oneList.getName().compareToIgnoreCase(twoList.getName());
-		}
 	}
 
 	///////////////////////////////////////// setters and getters
@@ -577,14 +565,14 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 
 	public void firstStart(){
 		Set<String> currencys = sPref.getStringSet(SD.PREFS_CURRENCYS, new HashSet<String>());
-		if (!currencys.contains(context.getString(R.string.prefs_default_currency))){
-			currencys.add(context.getString(R.string.prefs_default_currency));
+		if (!currencys.contains(context.getString(R.string.default_one_currency))){
+			currencys.add(context.getString(R.string.default_one_currency));
 		}
-		if (!currencys.contains(context.getString(R.string.prefs_two_currency))){
-			currencys.add(context.getString(R.string.prefs_two_currency));
+		if (!currencys.contains(context.getString(R.string.default_two_currency))){
+			currencys.add(context.getString(R.string.default_two_currency));
 		}
-		if (!currencys.contains(context.getString(R.string.prefs_three_currency))){
-			currencys.add(context.getString(R.string.prefs_three_currency));
+		if (!currencys.contains(context.getString(R.string.default_three_currency))){
+			currencys.add(context.getString(R.string.default_three_currency));
 		}
 		editor.putStringSet(SD.PREFS_CURRENCYS, currencys);
 		editor.commit();

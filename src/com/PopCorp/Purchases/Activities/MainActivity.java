@@ -5,14 +5,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,6 +31,8 @@ import com.PopCorp.Purchases.Adapters.NavigationListAdapter;
 import com.PopCorp.Purchases.Data.List;
 import com.PopCorp.Purchases.Fragments.ListFragment;
 import com.PopCorp.Purchases.Fragments.MenuFragment;
+import com.PopCorp.Purchases.Fragments.PreferencesFragment;
+import com.PopCorp.Purchases.Fragments.PreferencesMainFragment;
 import com.PopCorp.Purchases.Fragments.SalesFragment;
 import com.PopCorp.Purchases.Fragments.ShopesFragment;
 
@@ -99,7 +101,7 @@ public class MainActivity extends ActionBarActivity{
 					}				
 				}		
 				is.close();
-				FragmentManager fragmentManager = getSupportFragmentManager();
+				FragmentManager fragmentManager = getFragmentManager();
 			    Fragment findedFragment = fragmentManager.findFragmentByTag(MenuFragment.TAG);
 			    if (findedFragment!=null){
 			    	((MenuFragment) findedFragment).addListFromJSON(buf.toString());
@@ -136,7 +138,7 @@ public class MainActivity extends ActionBarActivity{
 	        drawerLayout.closeDrawers();
 	        return;
 	    }
-	    FragmentManager fragmentManager = getSupportFragmentManager();
+	    FragmentManager fragmentManager = getFragmentManager();
 	    Fragment findedFragment = fragmentManager.findFragmentByTag(ListFragment.TAG);
 	    if (findedFragment!=null){
 	    	((ListFragment) findedFragment).onBackPressed();
@@ -145,6 +147,11 @@ public class MainActivity extends ActionBarActivity{
 	    findedFragment = fragmentManager.findFragmentByTag(SalesFragment.TAG);
 	    if (findedFragment!=null){
 	    	((SalesFragment) findedFragment).onBackPressed();
+	    	return;
+	    }
+	    findedFragment = fragmentManager.findFragmentByTag(PreferencesFragment.TAG);
+	    if (findedFragment!=null){
+	    	((PreferencesFragment) findedFragment).onBackPressed();
 	    	return;
 	    }
 	    super.onBackPressed();
@@ -158,7 +165,7 @@ public class MainActivity extends ActionBarActivity{
 		
 		public void selectItem(int position){
 			((NavigationListAdapter) drawerList.getAdapter()).setSelected(position);
-			Fragment fragment = null;
+			Object fragment = null;
 			String tag = null;
 			switch (position) {
 			case 0 : {
@@ -178,16 +185,16 @@ public class MainActivity extends ActionBarActivity{
 				break;
 			}
 			case 3 : {
-				fragment = new MenuFragment();
-				tag = MenuFragment.TAG;
+				fragment = new PreferencesMainFragment();
+				tag = PreferencesMainFragment.TAG;
 				break;
 			}
 			}
 			
-		    FragmentManager fragmentManager = getSupportFragmentManager();
+		    android.app.FragmentManager fragmentManager = getFragmentManager();
 		    Fragment findedFragment = fragmentManager.findFragmentByTag(tag);
 		    if (findedFragment==null){
-		    	fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, tag).commit();
+		    	fragmentManager.beginTransaction().replace(R.id.content_frame, (Fragment) fragment, tag).commit();
 
 			    drawerList.setItemChecked(position, true);
 			    toolBar.setTitle(navigationItems[position]);

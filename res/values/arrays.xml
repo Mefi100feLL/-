@@ -81,5 +81,37 @@
 		<item >Карта</item>
 		<item >Настройки</item>
 	</string-array>
+	
+	<string-array name="sortarray">
+		<item>по алфавиту (А-Я)</item>
+		<item>по алфавиту (Я-А)</item>
+		<item>по добавлению</item>
+	</string-array>
+	
+	<string-array name="sizes">
+		<item>10</item>
+		<item>12</item>
+		<item>14</item>
+		<item>16</item>
+		<item>18</item>
+		<item>20</item>
+		<item>22</item>
+		<item>24</item>
+		<item>26</item>
+		<item>28</item>
+		<item>30</item>
+		<item>32</item>
+		<item>34</item>
+		<item>36</item>
+		<item>38</item>
+		<item>40</item>
+	</string-array>
+	
+	<string-array name="main_prefs">
+		<item>Вид списка</item>
+		<item>Функции списка</item>
+		<item>Акции</item>
+		<item>Программа</item>
+	</string-array>
     
 </resources>

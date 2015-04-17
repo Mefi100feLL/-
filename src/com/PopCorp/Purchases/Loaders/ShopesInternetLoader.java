@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.AsyncTaskLoader;
+import android.content.AsyncTaskLoader;
 
 import com.PopCorp.Purchases.Data.Shop;
 import com.PopCorp.Purchases.Utilites.LoaderShopesFromInternet;

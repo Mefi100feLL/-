@@ -6,15 +6,15 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.Loader;
+import android.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -371,7 +371,7 @@ public class ListFragment extends Fragment{
 		Fragment fragment = new MenuFragment();
 		String tag = MenuFragment.TAG;
 
-		FragmentManager fragmentManager = context.getSupportFragmentManager();
+		FragmentManager fragmentManager = context.getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, tag).commit();
 	}
 
@@ -403,7 +403,7 @@ public class ListFragment extends Fragment{
 			if (edizm.equals("")){
 				return adapterForSpinnerEdizm.getCount()-1;
 			}
-			edizmsForSpinner.add(edizm);
+			edizmsForSpinner.add(0, edizm);
 			addNewEdizmToPrefs(edizm);
 		}
 		return adapterForSpinnerEdizm.getPosition(edizm);
@@ -455,7 +455,7 @@ public class ListFragment extends Fragment{
 			if (shop.equals("")){
 				return adapterForSpinnerShop.getCount()-1;
 			}
-			shopesForSpinner.add(shop);
+			shopesForSpinner.add(0, shop);
 			addNewShopToPrefs(shop);
 		}
 		return adapterForSpinnerShop.getPosition(shop);

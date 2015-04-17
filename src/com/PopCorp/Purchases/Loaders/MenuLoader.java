@@ -5,7 +5,7 @@ import com.PopCorp.Purchases.DataBase.DB;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
+import android.content.CursorLoader;
 
 public class MenuLoader extends CursorLoader{
 
