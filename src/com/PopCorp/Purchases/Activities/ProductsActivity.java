@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,8 +101,15 @@ public class ProductsActivity extends ActionBarActivity{
 			controller.sort(item.getItemId());
 		}
 		}
-		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_MENU) {
+	        return true;
+	    }
+	    return super.onKeyUp(keyCode, event);
 	}
 	
 	public void showListView(int size){

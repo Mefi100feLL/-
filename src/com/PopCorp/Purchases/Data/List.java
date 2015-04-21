@@ -513,7 +513,7 @@ public class List {
 		return result;
 	}
 
-	public void sort() {
-		Collections.sort(items, new ListComparator());
+	public void sort(Context context) {
+		Collections.sort(items, new ListComparator(context));
 	}
 }

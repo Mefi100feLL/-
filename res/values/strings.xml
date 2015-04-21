@@ -172,7 +172,11 @@
 	<string name="prefs_display_no_off">Не гасить экран</string>
 	<string name="prefs_about">О программе</string>	
 	
+	<string name="prefs_default_size_text">16</string>
+	<string name="prefs_default_size_text_small">14</string>
 	
-	<string name="prefs_default_sort_listitem">по алфавиту (А-Я)</string>	
+	<string name="prefs_default_sort_listitem_one">по алфавиту (А-Я)</string>
+	<string name="prefs_default_sort_listitem_two">по алфавиту (Я-А)</string>
+	<string name="prefs_default_sort_listitem_three">по добавлению</string>
     
 </resources>

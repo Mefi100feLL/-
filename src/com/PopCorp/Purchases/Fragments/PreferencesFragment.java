@@ -71,7 +71,7 @@ public class PreferencesFragment extends PreferenceFragment {
 	private void initializePrefsForViewOfList() {
 		final Preference prefSortListItem = (Preference) findPreference(SD.PREFS_SORT_LIST_ITEM);
 		if (prefSortListItem!=null){
-			prefSortListItem.setSummary(context.getString(R.string.prefs_default_sort) + " " + sPref.getString(SD.PREFS_SORT_LIST_ITEM, context.getString(R.string.prefs_default_sort_listitem)));
+			prefSortListItem.setSummary(context.getString(R.string.prefs_default_sort) + " " + sPref.getString(SD.PREFS_SORT_LIST_ITEM, context.getString(R.string.prefs_default_sort_listitem_one)));
 			prefSortListItem.setOnPreferenceChangeListener(new OnPreferenceChangeListener(){
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {

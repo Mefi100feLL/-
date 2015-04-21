@@ -50,6 +50,7 @@ import com.PopCorp.Purchases.Comparators.MenuComparator;
 import com.PopCorp.Purchases.Data.List;
 import com.PopCorp.Purchases.DataBase.DB;
 import com.PopCorp.Purchases.Fragments.ListFragment;
+import com.PopCorp.Purchases.Fragments.MenuFragment;
 import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS;
 import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS.CallbackForLoadingSMS;
 import com.PopCorp.Purchases.Loaders.MenuLoader;
@@ -70,7 +71,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	public static final int TYPE_OF_LOADING_LIST_FROM_MAIL = 3;
 
 	public static final int ID_FOR_CREATE_LOADER_FROM_DB = 1;
-
+	
 	private SharedPreferences sPref;
 	private SharedPreferences.Editor editor;
 
@@ -84,11 +85,13 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	private ViewGroup layoutForSnackBar;
 	private List removedList;
 	private StaggeredGridLayoutManager mLayoutManager;
+	private MenuFragment fragment;
 
-	public MenuController(ActionBarActivity activity, ViewGroup layoutForSnackBar, StaggeredGridLayoutManager mLayoutManager){
+	public MenuController(ActionBarActivity activity, ViewGroup layoutForSnackBar, StaggeredGridLayoutManager mLayoutManager, MenuFragment fragment){
 		this.context = activity;
 		this.layoutForSnackBar = layoutForSnackBar;
 		this.mLayoutManager = mLayoutManager;
+		this.fragment = fragment;
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
 		editor = sPref.edit();
 
@@ -304,19 +307,19 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		time.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				Calendar now = Calendar.getInstance();
 				TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener(){
 					@Override
 					public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
 						date.set(Calendar.HOUR_OF_DAY, hourOfDay);
 						date.set(Calendar.MINUTE, minute);
+						date.set(Calendar.SECOND, 0);
 						time.setText(new SimpleDateFormat("HH:mm").format(date.getTime()));
 					}
 				};
                 TimePickerDialog tpd = TimePickerDialog.newInstance(
                 		timeListener,
-                        now.get(Calendar.HOUR_OF_DAY),
-                        now.get(Calendar.MINUTE),
+                		date.get(Calendar.HOUR_OF_DAY),
+                		date.get(Calendar.MINUTE),
                         true
                 );
                 tpd.setThemeDark(false);
@@ -414,7 +417,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 
 	private void addListFromCursor(Cursor cursor){
 		List newList = new List(db, cursor);
-		newList.sort();
+		newList.sort(context);
 		lists.add(newList);
 	}
 

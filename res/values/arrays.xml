@@ -83,9 +83,9 @@
 	</string-array>
 	
 	<string-array name="sortarray">
-		<item>по алфавиту (А-Я)</item>
-		<item>по алфавиту (Я-А)</item>
-		<item>по добавлению</item>
+		<item>@string/prefs_default_sort_listitem_one</item>
+		<item>@string/prefs_default_sort_listitem_two</item>
+		<item>@string/prefs_default_sort_listitem_three</item>
 	</string-array>
 	
 	<string-array name="sizes">

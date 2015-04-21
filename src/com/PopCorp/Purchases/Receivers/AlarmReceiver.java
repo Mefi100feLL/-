@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
@@ -22,15 +23,18 @@ public class AlarmReceiver extends BroadcastReceiver {
 	
 	@Override//создаем уведомление о сохраненном списке
 	public void onReceive(Context context, Intent intent) {
+		Bundle extra = intent.getExtras();
+		String title = extra.getString(ALARM_INTENT_TITLE);
+		String datelist = extra.getString(ALARM_INTENT_DATELIST);
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		WakeLock wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WACELOCK Purchases");
 		wakeLock.acquire();
 		Intent intentForStartActivity = new Intent(context, MainActivity.class);
 		if (intent!=null){
-			intentForStartActivity.putExtra(ListFragment.INTENT_TO_LIST_TITLE, intent.getStringExtra(ALARM_INTENT_TITLE));
-			intentForStartActivity.putExtra(ListFragment.INTENT_TO_LIST_DATELIST, intent.getStringExtra(ALARM_INTENT_DATELIST));
+			intentForStartActivity.putExtra(ListFragment.INTENT_TO_LIST_TITLE, title);
+			intentForStartActivity.putExtra(ListFragment.INTENT_TO_LIST_DATELIST, datelist);
 
-			createNotify(context, intentForStartActivity, intent.getStringExtra(ALARM_INTENT_TITLE), intent.getStringExtra(ALARM_INTENT_DATELIST));
+			createNotify(context, intentForStartActivity, title, datelist);
 			wakeLock.release();
 		}
 	}
@@ -65,9 +69,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmReceiver.class);//устанавливаем будильник
 		intent.setAction(name + datelist);
-		intent.putExtra(ALARM_INTENT_TITLE, name);
-		intent.putExtra(ALARM_INTENT_DATELIST, datelist);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+		Bundle args = new Bundle();
+		args.putString(ALARM_INTENT_TITLE, name.toString());
+		args.putString(ALARM_INTENT_DATELIST, datelist.toString());
+		intent.putExtras(args);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, dateInLong, pendingIntent);
 	}
 }

@@ -99,7 +99,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		th.setDaemon(true);
 		th.start();
 		openList(datelist);
-		Collections.sort(currentList.getItems(), new ListComparator());
+		Collections.sort(currentList.getItems(), new ListComparator(context));
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
 	}
 	
@@ -113,7 +113,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		
 		createListFromJSON(json);
 		
-		Collections.sort(currentList.getItems(), new ListComparator());
+		Collections.sort(currentList.getItems(), new ListComparator(context));
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
 	}
 	
@@ -195,6 +195,14 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	public void changeItemBuyed(ListItem item){
 		item.changeBuyed(db);
 		adapter.notifyItemChanged(adapter.getPublishItems().indexOf(item));
+		if (sPref.getBoolean(SD.PREFS_REPLACE_BUYED, true)){
+			int oldPosition = adapter.getPublishItems().indexOf(item);
+			adapter.sortItems();
+			int newPosition = adapter.getPublishItems().indexOf(item);
+			if (newPosition!=oldPosition){
+				adapter.notifyItemMoved(oldPosition, newPosition);
+			}
+		}
 		recoastTotals();
 	}
 	
@@ -367,7 +375,7 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 				}
 			}
 			cursor.close();
-			Collections.sort(currentList.getItems(), new ListComparator());
+			Collections.sort(currentList.getItems(), new ListComparator(context));
 			recoastTotals();
 			refreshFilterShops();
 		}

@@ -2,10 +2,15 @@ package com.PopCorp.Purchases.Adapters;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.ListIterator;
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,44 +23,40 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.SD;
 import com.PopCorp.Purchases.Activities.MainActivity;
 import com.PopCorp.Purchases.Comparators.ListComparator;
 import com.PopCorp.Purchases.Controllers.ListController;
 import com.PopCorp.Purchases.Data.List;
 import com.PopCorp.Purchases.Data.ListItem;
+import com.PopCorp.Purchases.DataBase.DB;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> implements Filterable{
 
 	private MainActivity context;
 	private ArrayList<ListItem> items;
-	private ArrayList<ListItem> publishItems;
+	private ArrayList<ListItem> publishItems = new ArrayList<ListItem>();
+	private ArrayList<ListItem> selectedItems = new ArrayList<ListItem>();
 	private ListController controller;
 	private ListItem updatedItem;
 	private int oldPosition = -1;
-
-	public ArrayList<ListItem> getPublishItems() {
-		return publishItems;
-	}
+	private HashMap<String, Integer> categories;
 
 	private String currency;
 	private RecyclerView listView;
 	private ActionMode actionMode;
-	public ActionMode getActionMode() {
-		return actionMode;
-	}
-
-	private ArrayList<ListItem> selectedItems;
-
+	private SharedPreferences sPref;
+	
 	public ListAdapter(MainActivity context, ArrayList<ListItem> items, ListController controller, String currency, RecyclerView listView){
 		super();
 		this.context = context;
 		this.items = items;
-		publishItems = new ArrayList<ListItem>();
 		publishItems.addAll(items);
 		this.controller = controller;
 		this.currency = currency;
 		this.listView = listView;
-		selectedItems = new ArrayList<ListItem>();
+		sPref = PreferenceManager.getDefaultSharedPreferences(context);
+		categories = getCategories();
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
@@ -68,7 +69,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		public TextView comment;
 		public TextView totalOne;
 		public TextView totalTwo;
+		public TextView po;
 		public ImageView important;
+		public ImageView color;
 		private ClickListener clickListener;
 
 		public ViewHolder(View view) {
@@ -82,6 +85,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 			comment = (TextView) view.findViewById(R.id.item_listitem_comment);
 			totalOne = (TextView) view.findViewById(R.id.item_listitem_total_one);
 			totalTwo = (TextView) view.findViewById(R.id.item_listitem_total_two);
+			po = (TextView) view.findViewById(R.id.item_listitem_po);
+			color = (ImageView) view.findViewById(R.id.item_listitem_image_color);
 			important = (ImageView) view.findViewById(R.id.item_listitem_image_important);
 			view.setOnClickListener(this);
 			view.setOnLongClickListener(this);
@@ -181,6 +186,30 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		ListItem item = publishItems.get(position);
 
 		holder.name.setText(item.getName());
+		
+		holder.name.setTextSize(TypedValue.COMPLEX_UNIT_SP, Float.valueOf(sPref.getString(SD.PREFS_LIST_ITEM_FONT_SIZE, context.getString(R.string.prefs_default_size_text))));
+		Float smallTextSize = Float.valueOf(sPref.getString(SD.PREFS_LIST_ITEM_FONT_SIZE_SMALL, context.getString(R.string.prefs_default_size_text_small)));
+
+		holder.count.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		holder.edizm.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		holder.coast.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		holder.shop.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		holder.comment.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		holder.totalTwo.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		holder.totalOne.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		holder.po.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
+		
+		if (sPref.getBoolean(SD.PREFS_SHOW_CATEGORIES, true)){
+			holder.color.setVisibility(View.VISIBLE);
+			if (categories.containsKey(item.getCategory())){
+				holder.color.setBackgroundColor(categories.get(item.getCategory()));
+			} else{
+				holder.color.setBackgroundColor(context.getResources().getColor(R.color.md_blue_500));
+			}
+		} else{
+			holder.color.setVisibility(View.GONE);
+		}
+		
 		holder.count.setText(item.getCountInString());
 		holder.edizm.setText(item.getEdizm());
 		holder.coast.setText(item.getCoastInString() + " " + currency);
@@ -265,14 +294,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		if (item.isBuyed()){
 			holder.name.setPaintFlags(holder.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG| Paint.FAKE_BOLD_TEXT_FLAG);
 			((ViewGroup) holder.view).getChildAt(0).setAlpha(0.3f);
+			((ViewGroup) holder.view).getChildAt(1).setAlpha(0.3f);
 		} else {
 			holder.name.setPaintFlags(Paint.LINEAR_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
 			((ViewGroup) holder.view).getChildAt(0).setAlpha(1f);
+			((ViewGroup) holder.view).getChildAt(1).setAlpha(1f);
 		}
 
 		if (selectedItems.contains(item)){
+			holder.color.setImageResource(R.drawable.ic_done_white_24dp);
 			holder.view.setActivated(true);
 		} else{
+			holder.color.setImageResource(android.R.color.transparent);
 			holder.view.setActivated(false);
 		}
 	}
@@ -306,7 +339,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 				tmpItems.removeAll(publishItems);
 				publishItems.addAll(tmpItems);
 
-				Collections.sort(publishItems, new ListComparator());
+				Collections.sort(publishItems, new ListComparator(context));
 				for (ListItem item : tmpItems){
 					int position = publishItems.indexOf(item);
 					if (position!=-1){
@@ -355,6 +388,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
 		return filter;
 	}
+	
+	public ActionMode getActionMode() {
+		return actionMode;
+	}
 
 	public String getCurrency() {
 		return currency;
@@ -367,5 +404,30 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 	public void setUpdatedItem(int oldPosition, ListItem editedItem) {
 		this.oldPosition = oldPosition;
 		this.updatedItem = editedItem;
+	}
+	
+	public void sortItems(){
+		Collections.sort(publishItems, new ListComparator(context));
+	}
+	
+	public ArrayList<ListItem> getPublishItems() {
+		return publishItems;
+	}
+	
+	public HashMap<String, Integer> getCategories() {
+		HashMap<String, Integer> result = new HashMap<String, Integer>();
+		DB db = new DB(context);
+		db.open();
+		Cursor cursor = db.getAllData(DB.TABLE_CATEGORIES);
+		if (cursor!=null){
+			if (cursor.moveToFirst()){
+				result.put(cursor.getString(cursor.getColumnIndex(DB.KEY_CATEGS_NAME)), cursor.getInt(cursor.getColumnIndex(DB.KEY_CATEGS_COLOR)));
+				while (cursor.moveToNext()){
+					result.put(cursor.getString(cursor.getColumnIndex(DB.KEY_CATEGS_NAME)), cursor.getInt(cursor.getColumnIndex(DB.KEY_CATEGS_COLOR)));
+				}
+			}
+			cursor.close();
+		}
+		return result;
 	}
 }

@@ -66,12 +66,7 @@ public class MainActivity extends ActionBarActivity{
 	    drawerClickListener = new DrawerClickListener();
 	    drawerList.setOnItemClickListener(drawerClickListener);
 
-	    Intent intent = getIntent();
-	    if (intent.getStringExtra(ListFragment.INTENT_TO_LIST_TITLE)!=null){
-	    	drawerClickListener.selectItem(1);
-	    }
-	    
-		drawerClickListener.selectItem(1);
+	    drawerClickListener.selectItem(1, getIntent().getExtras());
 		
 		Uri data = getIntent().getData();
 		if (data!=null) {
@@ -160,12 +155,12 @@ public class MainActivity extends ActionBarActivity{
 	private class DrawerClickListener implements OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			selectItem(position);
+			selectItem(position, null);
 		}
 		
-		public void selectItem(int position){
+		public void selectItem(int position, Bundle args){
 			((NavigationListAdapter) drawerList.getAdapter()).setSelected(position);
-			Object fragment = null;
+			Fragment fragment = null;
 			String tag = null;
 			switch (position) {
 			case 0 : {
@@ -174,8 +169,7 @@ public class MainActivity extends ActionBarActivity{
 				break;
 			}
 			case 1 : {
-				Intent intent = getIntent();
-				fragment = new MenuFragment(intent.getStringExtra(ListFragment.INTENT_TO_LIST_TITLE), intent.getStringExtra(ListFragment.INTENT_TO_LIST_DATELIST));
+				fragment = new MenuFragment();
 				tag = MenuFragment.TAG;
 				break;
 			}
@@ -190,8 +184,9 @@ public class MainActivity extends ActionBarActivity{
 				break;
 			}
 			}
+			fragment.setArguments(args);
 			
-		    android.app.FragmentManager fragmentManager = getFragmentManager();
+		    FragmentManager fragmentManager = getFragmentManager();
 		    Fragment findedFragment = fragmentManager.findFragmentByTag(tag);
 		    if (findedFragment==null){
 		    	fragmentManager.beginTransaction().replace(R.id.content_frame, (Fragment) fragment, tag).commit();
@@ -217,6 +212,19 @@ public class MainActivity extends ActionBarActivity{
 			}
 		}
 		super.onDestroy();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+	        if (toolBar.isOverflowMenuShowing()) {
+	        	toolBar.hideOverflowMenu();
+	        } else {
+	        	toolBar.showOverflowMenu();
+	        }
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override

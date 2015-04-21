@@ -16,7 +16,7 @@
 			android:title="@string/prefs_sort_list"
 			android:entries="@array/sortarray"
 			android:entryValues="@array/sortarray"
-			android:defaultValue="@string/prefs_default_sort_listitem"/>
+			android:defaultValue="@string/prefs_default_sort_listitem_one"/>
         
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
 			android:key="listsize"
@@ -24,7 +24,7 @@
 			android:title="@string/prefs_text_size"
 			android:entries="@array/sizes"
 			android:entryValues="@array/sizes"
-			android:defaultValue="14" />
+			android:defaultValue="@string/prefs_default_size_text" />
         
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
 			android:key="listsizesmall"
@@ -32,7 +32,7 @@
 			android:title="@string/prefs_text_size_small"
 			android:entries="@array/sizes"
 			android:entryValues="@array/sizes"
-			android:defaultValue="12" />
+			android:defaultValue="@string/prefs_default_size_text_small" />
         
         <CheckBoxPreference
 			android:key="showcategories"
