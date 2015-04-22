@@ -46,7 +46,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 	private RecyclerView listView;
 	private ActionMode actionMode;
 	private SharedPreferences sPref;
-	
+
 	public ListAdapter(MainActivity context, ArrayList<ListItem> items, ListController controller, String currency, RecyclerView listView){
 		super();
 		this.context = context;
@@ -60,7 +60,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
-		public View view;
+		public ViewGroup view;
 		public TextView name;
 		public TextView count;
 		public TextView edizm;
@@ -74,7 +74,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		public ImageView color;
 		private ClickListener clickListener;
 
-		public ViewHolder(View view) {
+		public ViewHolder(ViewGroup view) {
 			super(view);
 			this.view = view;
 			name = (TextView) view.findViewById(R.id.item_listitem_name);
@@ -88,8 +88,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 			po = (TextView) view.findViewById(R.id.item_listitem_po);
 			color = (ImageView) view.findViewById(R.id.item_listitem_image_color);
 			important = (ImageView) view.findViewById(R.id.item_listitem_image_important);
-			view.setOnClickListener(this);
-			view.setOnLongClickListener(this);
+			view.getChildAt(0).setOnClickListener(this);
+			view.getChildAt(0).setOnLongClickListener(this);
 		}
 
 		public interface ClickListener {
@@ -186,7 +186,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		ListItem item = publishItems.get(position);
 
 		holder.name.setText(item.getName());
-		
+
 		holder.name.setTextSize(TypedValue.COMPLEX_UNIT_SP, Float.valueOf(sPref.getString(SD.PREFS_LIST_ITEM_FONT_SIZE, context.getString(R.string.prefs_default_size_text))));
 		Float smallTextSize = Float.valueOf(sPref.getString(SD.PREFS_LIST_ITEM_FONT_SIZE_SMALL, context.getString(R.string.prefs_default_size_text_small)));
 
@@ -198,7 +198,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		holder.totalTwo.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
 		holder.totalOne.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
 		holder.po.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
-				
+
 		holder.count.setText(item.getCountInString());
 		holder.edizm.setText(item.getEdizm());
 		holder.coast.setText(item.getCoastInString() + " " + currency);
@@ -243,21 +243,25 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		holder.setClickListener(new ViewHolder.ClickListener() {
 			@Override
 			public void onClick(View view, int position, boolean isLongClick) {
-				if (isLongClick) {
-					if (actionMode!=null){
-						changeItemInActionMode(position);
-					} else{
-						listView.startActionMode(callback);
-						selectedItems.add(publishItems.get(position));
-						actionMode.setTitle(String.valueOf(selectedItems.size()));
-						notifyItemChanged(position);
+				try{
+					if (isLongClick) {
+						if (actionMode!=null){
+							changeItemInActionMode(position);
+						} else{
+							listView.startActionMode(callback);
+							selectedItems.add(publishItems.get(position));
+							actionMode.setTitle(String.valueOf(selectedItems.size()));
+							notifyItemChanged(position);
+						}
+					} else {
+						if (actionMode!=null){
+							changeItemInActionMode(position);
+						} else{
+							controller.changeItemBuyed(publishItems.get(position));
+						}
 					}
-				} else {
-					if (actionMode!=null){
-						changeItemInActionMode(position);
-					} else{
-						controller.changeItemBuyed(publishItems.get(position));
-					}
+				} catch(Exception e){
+
 				}
 			}
 
@@ -282,21 +286,21 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		});
 		if (item.isBuyed()){
 			holder.name.setPaintFlags(holder.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG| Paint.FAKE_BOLD_TEXT_FLAG);
-			((ViewGroup) holder.view).getChildAt(0).setAlpha(0.3f);
+			((ViewGroup) holder.view.getChildAt(0)).getChildAt(1).setAlpha(0.3f);
+			holder.color.setAlpha(0.3f);
 		} else {
 			holder.name.setPaintFlags(Paint.LINEAR_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
-			((ViewGroup) holder.view).getChildAt(0).setAlpha(1f);
+			((ViewGroup) holder.view.getChildAt(0)).getChildAt(1).setAlpha(1f);
+			holder.color.setAlpha(1f);
 		}
 
-		if (selectedItems.contains(item)){
-			holder.color.setImageResource(R.drawable.ic_done_white_24dp);
-			//holder.view.setActivated(true);
-		} else{
-			holder.color.setImageResource(android.R.color.transparent);
-			//holder.view.setActivated(false);
-		}
 		if (sPref.getBoolean(SD.PREFS_SHOW_CATEGORIES, true)){
 			holder.color.setVisibility(View.VISIBLE);
+			if (selectedItems.contains(item)){
+				holder.color.setImageResource(R.drawable.ic_done_white_24dp);
+			} else{
+				holder.color.setImageResource(android.R.color.transparent);
+			}
 			if (categories.containsKey(item.getCategory())){
 				holder.color.setBackgroundColor(categories.get(item.getCategory()));
 			} else{
@@ -304,6 +308,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 			}
 		} else{
 			holder.color.setVisibility(View.GONE);
+			if (selectedItems.contains(item)){
+				((ViewGroup) holder.view).getChildAt(0).setActivated(true);
+			} else{
+				((ViewGroup) holder.view).getChildAt(0).setActivated(false);
+			}
 		}
 	}
 
@@ -311,7 +320,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listitem, parent, false);
 
-		ViewHolder viewHolder = new ViewHolder(v);
+		ViewHolder viewHolder = new ViewHolder((ViewGroup) v);
 		return viewHolder;
 	}
 
@@ -385,7 +394,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
 		return filter;
 	}
-	
+
 	public ActionMode getActionMode() {
 		return actionMode;
 	}
@@ -402,15 +411,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		this.oldPosition = oldPosition;
 		this.updatedItem = editedItem;
 	}
-	
+
 	public void sortItems(){
 		Collections.sort(publishItems, new ListComparator(context));
 	}
-	
+
 	public ArrayList<ListItem> getPublishItems() {
 		return publishItems;
 	}
-	
+
 	public HashMap<String, Integer> getCategories() {
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		DB db = new DB(context);

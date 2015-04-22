@@ -9,7 +9,7 @@
         android:id="@+id/fragment_sales_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:listSelector="@drawable/selector_for_list"
+        android:listSelector="@drawable/selector_for_normal_list"
         android:numColumns="2"
         android:visibility="invisible" >
 

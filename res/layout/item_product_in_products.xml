@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.balysv.materialripple.MaterialRippleLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ripple"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
@@ -41,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_for_buttons"
                 android:padding="8dp"
-                android:src="@drawable/ic_minus" />
+                android:src="@drawable/ic_minus"
+                android:stateListAnimator="@anim/button_elevation" />
 
             <TextView
                 android:id="@+id/item_product_edit_count"

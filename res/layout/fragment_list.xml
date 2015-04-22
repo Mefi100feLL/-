@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:id="@+id/fragment_list_layout_with_totals"
@@ -61,28 +61,44 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_list_listview"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/fragment_list_layout_with_totals"
-        android:scrollbars="vertical" >
-    </android.support.v7.widget.RecyclerView>
-    
+        android:layout_above="@id/fragment_list_layout_with_totals" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp" >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragment_list_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey200"
+                android:scrollbars="vertical" >
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </FrameLayout>
+
     <FrameLayout
         android:id="@+id/fragment_list_layout_for_snackbar"
-        android:layout_above="@id/fragment_list_layout_with_totals"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragment_list_layout_with_totals" >
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/fragment_list_fields_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_marginTop="-4dp"
+        android:orientation="vertical"
         android:visibility="gone" >
 
         <android.support.v7.widget.CardView

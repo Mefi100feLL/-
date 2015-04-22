@@ -217,7 +217,7 @@ public class ListFragment extends Fragment{
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
 		listView.setLayoutManager(mLayoutManager);
 		listView.setAdapter(controller.getAdapter());
-
+		
 		RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 		listView.setItemAnimator(itemAnimator);
 
@@ -286,6 +286,8 @@ public class ListFragment extends Fragment{
 			layoutWithFields.setVisibility(View.VISIBLE);
 		}
 		editTextForName.setText(item.getName());
+		editTextForName.requestFocus(); 
+		editTextForName.dismissDropDown();
 		editTextForCount.setText(item.getCountInString());
 		spinnerForEdizm.setSelection(getPositionForEdizm(item.getEdizm()));
 		editTextForCoast.setText(item.getCoastInString());
