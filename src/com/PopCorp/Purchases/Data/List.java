@@ -44,7 +44,7 @@ public class List {
 
 	public static final int[] TYPES_OF_SENDING_LIST = {TYPE_OF_SENDING_LIST_TO_SMS, TYPE_OF_SENDING_LIST_TO_EMAIL, TYPE_OF_SENDING_LIST_AS_TEXT};
 
-	private ArrayList<ListItem> items;
+	private ArrayList<ListItem> items = new ArrayList<ListItem>();
 	private long id;
 	private String name;
 	private String datelist;
@@ -62,7 +62,6 @@ public class List {
 		this.alarm = alarm;
 		this.currency = currency;
 
-		items = new ArrayList<ListItem>();
 		if (db!=null){
 			loadItemsFromDB(db);
 		}

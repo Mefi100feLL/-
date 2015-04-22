@@ -295,7 +295,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		popupMenu.show();
 	}
 
-	protected void showDialogForAlarm(final int position) {
+	private void showDialogForAlarm(final int position) {
 		AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.dialog_set_alert, null);

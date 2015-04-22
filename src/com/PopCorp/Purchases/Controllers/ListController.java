@@ -51,6 +51,8 @@ import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS;
 import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS.CallbackForLoadingSMS;
 import com.PopCorp.Purchases.Utilites.ListWriter;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.MaterialDialog.ButtonCallback;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
@@ -60,7 +62,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListen
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadingSMS{
+public class ListController implements CallbackForLoadingSMS{
 
 	public static final int ID_FOR_CREATE_LOADER_FROM_DB = 1;
 	
@@ -91,66 +93,39 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		this.layoutForSnackBar = layoutForSnackBar;
 		context = (MainActivity) fragment.getActivity();
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
-		db = new DB(context);
 		openDB();
 		
-		Thread th = new Thread(null, loadAll, "loadAll");
-		th.setPriority(10);
-		th.setDaemon(true);
-		th.start();
-		openList(datelist);
-		Collections.sort(currentList.getItems(), new ListComparator(context));
-		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
+		loadAllProducts();
+		openList(datelist, listView);
 	}
-	
+
 	public ListController(ListFragment fragment, String json, RecyclerView listView, ViewGroup layoutForSnackBar){
 		this.fragment = fragment;
 		this.layoutForSnackBar = layoutForSnackBar;
 		context = (MainActivity) fragment.getActivity();
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
-		db = new DB(context);
 		openDB();
 		
 		createListFromJSON(json);
 		
-		Collections.sort(currentList.getItems(), new ListComparator(context));
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
-	}
+		adapter.sortItems();
+	}	
 	
-	Runnable loadAll = new Runnable() {
-		@Override
-		public void run() {
-			Cursor cursorWithAllProducts = db.getdata(DB.TABLE_ALL_ITEMS, new String[] {DB.KEY_ALL_ITEMS_NAME}, null, null, null, null, null);
-			if (cursorWithAllProducts!=null){
-				if (cursorWithAllProducts.moveToFirst()){
-					allProducts.add(cursorWithAllProducts.getString(cursorWithAllProducts.getColumnIndex(DB.KEY_ALL_ITEMS_NAME)));
-					while (cursorWithAllProducts.moveToNext()){
-						allProducts.add(cursorWithAllProducts.getString(cursorWithAllProducts.getColumnIndex(DB.KEY_ALL_ITEMS_NAME)));
-					}
-				}
-				cursorWithAllProducts.close();
-			}
-			
-			setAdapterWithProducts(new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, allProducts.toArray(new String[] {})));
-			handler.post(new Runnable() {
-				public void run() {
-					fragment.setAutoCompleteAdapter();
-				}
-			});
-		}
-	};
-	
-	private void openList(String datelist){
+	private void openList(String datelist, RecyclerView listView){
 		Cursor cursor = db.getdata(DB.TABLE_LISTS, DB.COLUMNS_LISTS_WITH_ID, DB.KEY_LISTS_DATELIST + "='" + datelist + "'", null, null, null, null);
 		if (cursor!=null){
 			if (cursor.moveToFirst()){
-				currentList = new List(null, cursor);
+				currentList = new List(db, cursor);
 			}
 			cursor.close();
 		}
 		if (currentList==null){
 			fragment.backToLists();
+			return;
 		}
+		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
+		adapter.sortItems();
 	}
 	
 	private void createListFromJSON(String json) {
@@ -173,18 +148,19 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	}
 	
 	public void removeCurrentList() {
-		AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
-		builder.setTitle(R.string.dialog_title_remove_list);
-		builder.setMessage(R.string.dialog_are_you_sure_to_remove_list);
-		builder.setPositiveButton(R.string.dialog_remove, new DialogInterface.OnClickListener() {
+		MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
+		builder.title(R.string.dialog_title_remove_list);
+		builder.content(R.string.dialog_are_you_sure_to_remove_list);
+		builder.positiveText(R.string.dialog_remove);
+		builder.negativeText(R.string.dialog_cancel);
+		builder.callback(new ButtonCallback(){
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onPositive(MaterialDialog dialog) {
 				currentList.remove(db);
 				fragment.backToLists();
 			}
 		});
-		builder.setNegativeButton(R.string.dialog_cancel, null);
-		Dialog dialog = builder.create();
+		Dialog dialog = builder.build();
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
 	}
@@ -276,27 +252,33 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	}
 	
 	
-	public void addNewListItem(String name, String count, String edizm, String coast, String category, String shop, String comment, String important){
+	public boolean addNewListItem(String name, String count, String edizm, String coast, String category, String shop, String comment, String important){
 		if (editedItem!=null){
-			editItem(name, count, edizm, coast, category, shop, comment, important);
-			return;
+			return editItem(name, count, edizm, coast, category, shop, comment, important);
 		}
 		ListItem newItem = currentList.addNewItem(db, name, count, edizm, coast, category, shop, comment, "false", important);
 		if (newItem==null){
-			// TODO Auto-generated method stub
-			//product all exists
-		} else{
-			refreshAll();
+			return false;
 		}
+		refreshAll();
+		return true;
 	}
 
-	private void editItem(String name, String count, String edizm, String coast, String category, String shop, String comment, String important) {
+	private boolean editItem(String name, String count, String edizm, String coast, String category, String shop, String comment, String important) {
+		for (ListItem item : currentList.getItems()){
+			if (item.getName().equals(name)){
+				if (!item.equals(editedItem)){
+					return false;
+				}
+			}
+		}
 		int oldPosition = adapter.getPublishItems().indexOf(editedItem);
 		adapter.notifyItemChanged(oldPosition);
 		editedItem.update(db, name, count, edizm, coast, category, shop, comment, important);
 		refreshAll();
 		adapter.setUpdatedItem(oldPosition, editedItem);
 		editedItem = null;
+		return true;
 	}
 
 	public void sendItems(int typeOfSending, ArrayList<ListItem> selectedItems) {
@@ -355,37 +337,6 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	
 	
 	
-	//////////////////////////////////////////////////////////// LOADER ITEMS FROM DB //////////////////////////////////////////////////
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Loader<Cursor> result = null;
-		if (id == ID_FOR_CREATE_LOADER_FROM_DB){
-			result = new ListLoader(context, db, currentList.getDatelist());
-		}
-		return result;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (cursor!=null){
-			if (cursor.moveToFirst()){
-				currentList.addListItem(cursor);
-				while (cursor.moveToNext()){
-					currentList.addListItem(cursor);
-				}
-			}
-			cursor.close();
-			Collections.sort(currentList.getItems(), new ListComparator(context));
-			recoastTotals();
-			refreshFilterShops();
-		}
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		
-	}
-	////////////////////////////////////////////////////////////LOADER ITEMS FROM DB //////////////////////////////////////////////////
 	
 	public void closeDB(){
 		if (db!=null){
@@ -396,10 +347,11 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	}
 	
 	public void openDB(){
-		if (db!=null){
-			if (db.isClosed()){
-				db.open();
-			}
+		if (db==null){
+			db = new DB(context);
+		}
+		if (db.isClosed()){
+			db.open();
 		}
 	}
 	
@@ -431,19 +383,19 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		time.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				Calendar now = Calendar.getInstance();
 				TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener(){
 					@Override
 					public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
 						date.set(Calendar.HOUR_OF_DAY, hourOfDay);
 						date.set(Calendar.MINUTE, minute);
+						date.set(Calendar.SECOND, 0);
 						time.setText(new SimpleDateFormat("HH:mm").format(date.getTime()));
 					}
 				};
                 TimePickerDialog tpd = TimePickerDialog.newInstance(
                 		timeListener,
-                        now.get(Calendar.HOUR_OF_DAY),
-                        now.get(Calendar.MINUTE),
+                        date.get(Calendar.HOUR_OF_DAY),
+                        date.get(Calendar.MINUTE),
                         true
                 );
                 tpd.setThemeDark(false);
@@ -721,4 +673,34 @@ public class ListController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 		}
 		return result;
 	}
+	
+	private void loadAllProducts() {
+		Thread th = new Thread(null, loadAll, "loadAll");
+		th.setPriority(10);
+		th.setDaemon(true);
+		th.start();
+	}
+	
+	Runnable loadAll = new Runnable() {
+		@Override
+		public void run() {
+			Cursor cursorWithAllProducts = db.getdata(DB.TABLE_ALL_ITEMS, new String[] {DB.KEY_ALL_ITEMS_NAME}, null, null, null, null, null);
+			if (cursorWithAllProducts!=null){
+				if (cursorWithAllProducts.moveToFirst()){
+					allProducts.add(cursorWithAllProducts.getString(cursorWithAllProducts.getColumnIndex(DB.KEY_ALL_ITEMS_NAME)));
+					while (cursorWithAllProducts.moveToNext()){
+						allProducts.add(cursorWithAllProducts.getString(cursorWithAllProducts.getColumnIndex(DB.KEY_ALL_ITEMS_NAME)));
+					}
+				}
+				cursorWithAllProducts.close();
+			}
+			
+			setAdapterWithProducts(new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, allProducts.toArray(new String[] {})));
+			handler.post(new Runnable() {
+				public void run() {
+					fragment.setAutoCompleteAdapter();
+				}
+			});
+		}
+	};
 }

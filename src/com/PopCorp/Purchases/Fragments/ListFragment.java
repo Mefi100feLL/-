@@ -10,11 +10,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
-import android.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,7 +42,6 @@ import com.PopCorp.Purchases.SD;
 import com.PopCorp.Purchases.Activities.ProductsActivity;
 import com.PopCorp.Purchases.Adapters.CategoriesAdapter;
 import com.PopCorp.Purchases.Controllers.ListController;
-import com.PopCorp.Purchases.Controllers.MenuController;
 import com.PopCorp.Purchases.Data.ListItem;
 import com.PopCorp.Purchases.Data.Product;
 import com.shamanland.fab.FloatingActionButton;
@@ -145,20 +142,11 @@ public class ListFragment extends Fragment{
 					layoutWithFields.setVisibility(View.VISIBLE);
 				} else {
 					if (!editTextForName.getText().toString().isEmpty()){
-						for (ListItem listItem : controller.getCurrentList().getItems()){
-							if (listItem.getName().equals(editTextForName.getText().toString())){
-								if (controller.getEditedItem()==null){
-									return;
-								} else {
-									break;//if editing, then name may equals
-								}
-							}
-						}
 						String shop = (String) spinnerForShop.getSelectedItem();
 						if (spinnerForShop.getSelectedItemPosition() == adapterForSpinnerShop.getCount()-1){
 							shop = "";
 						}
-						controller.addNewListItem(
+						boolean result = controller.addNewListItem(
 								editTextForName.getText().toString(),
 								editTextForCount.getText().toString(),
 								(String) spinnerForEdizm.getSelectedItem(),
@@ -167,8 +155,12 @@ public class ListFragment extends Fragment{
 								shop,
 								editTextForComment.getText().toString(),
 								String.valueOf(checkBoxForImportant.isChecked()));
+						if (!result){
+							controller.showToast(R.string.notify_listitem_already_exists);
+							return;
+						}
 					} else {
-						// show toast about no name
+						controller.showToast(R.string.notify_enter_name_of_listitem);
 						return;
 					}
 					layoutWithFields.setVisibility(View.GONE);
@@ -219,7 +211,7 @@ public class ListFragment extends Fragment{
 
 		toolBar.setTitle(getArguments().getString(INTENT_TO_LIST_TITLE));
 		controller = new ListController(this, getArguments().getString(INTENT_TO_LIST_TITLE), getArguments().getString(INTENT_TO_LIST_DATELIST), listView, layoutForSnackBar);
-
+		
 		toolBar.setTitle(controller.getCurrentList().getName());
 
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
@@ -235,15 +227,8 @@ public class ListFragment extends Fragment{
 		initializeEdizms();
 		initializeSpinnerForCategory();
 		initializeSpinnerForShop();
-
-		getLoaderManager().initLoader(MenuController.ID_FOR_CREATE_LOADER_FROM_DB, new Bundle(), controller);
-
-		Loader<Cursor> loaderFromDB = getLoaderManager().getLoader(MenuController.ID_FOR_CREATE_LOADER_FROM_DB);
-		loaderFromDB.forceLoad();
 		return rootView;
 	}
-
-	
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -251,6 +236,7 @@ public class ListFragment extends Fragment{
 		menu.clear();
 		inflater.inflate(R.menu.menu_for_list, menu);
 		this.menu = menu;
+		controller.refreshAll();
 	}
 
 	@Override
@@ -356,9 +342,13 @@ public class ListFragment extends Fragment{
 	}
 
 	private void displaySpeechRecognizer() {
-		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-		startActivityForResult(intent, REQUEST_CODE_FOR_INTENT_SPEECH);
+		try{
+			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+			startActivityForResult(intent, REQUEST_CODE_FOR_INTENT_SPEECH);
+		} catch(Exception e){
+			controller.showToast(R.string.notify_no_application_for_record_voice);
+		}
 	}
 
 	public void setTitle(String newName) {

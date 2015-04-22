@@ -198,18 +198,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		holder.totalTwo.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
 		holder.totalOne.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
 		holder.po.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
-		
-		if (sPref.getBoolean(SD.PREFS_SHOW_CATEGORIES, true)){
-			holder.color.setVisibility(View.VISIBLE);
-			if (categories.containsKey(item.getCategory())){
-				holder.color.setBackgroundColor(categories.get(item.getCategory()));
-			} else{
-				holder.color.setBackgroundColor(context.getResources().getColor(R.color.md_blue_500));
-			}
-		} else{
-			holder.color.setVisibility(View.GONE);
-		}
-		
+				
 		holder.count.setText(item.getCountInString());
 		holder.edizm.setText(item.getEdizm());
 		holder.coast.setText(item.getCoastInString() + " " + currency);
@@ -294,19 +283,27 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		if (item.isBuyed()){
 			holder.name.setPaintFlags(holder.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG| Paint.FAKE_BOLD_TEXT_FLAG);
 			((ViewGroup) holder.view).getChildAt(0).setAlpha(0.3f);
-			((ViewGroup) holder.view).getChildAt(1).setAlpha(0.3f);
 		} else {
 			holder.name.setPaintFlags(Paint.LINEAR_TEXT_FLAG | Paint.FAKE_BOLD_TEXT_FLAG);
 			((ViewGroup) holder.view).getChildAt(0).setAlpha(1f);
-			((ViewGroup) holder.view).getChildAt(1).setAlpha(1f);
 		}
 
 		if (selectedItems.contains(item)){
 			holder.color.setImageResource(R.drawable.ic_done_white_24dp);
-			holder.view.setActivated(true);
+			//holder.view.setActivated(true);
 		} else{
 			holder.color.setImageResource(android.R.color.transparent);
-			holder.view.setActivated(false);
+			//holder.view.setActivated(false);
+		}
+		if (sPref.getBoolean(SD.PREFS_SHOW_CATEGORIES, true)){
+			holder.color.setVisibility(View.VISIBLE);
+			if (categories.containsKey(item.getCategory())){
+				holder.color.setBackgroundColor(categories.get(item.getCategory()));
+			} else{
+				holder.color.setBackgroundColor(context.getResources().getColor(R.color.md_blue_grey_500));
+			}
+		} else{
+			holder.color.setVisibility(View.GONE);
 		}
 	}
 

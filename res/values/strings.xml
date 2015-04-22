@@ -94,6 +94,10 @@
 	<string name="dialog_name_of_category">Наименование категории</string>
 	
 	
+	<string name="notify_listitem_already_exists">Такой товар уже есть в списке</string>
+	<string name="notify_no_application_for_record_voice">Приложение для синтеза речи не найдено</string>
+	<string name="notify_enter_name_of_listitem">Введите наименование товара</string>
+	
 	<string name="string_no_shop">Нет магазина</string>
 	<string name="string_no_category">Нет категории</string>
 	<string name="string_add_currency">Добавить валюту</string>

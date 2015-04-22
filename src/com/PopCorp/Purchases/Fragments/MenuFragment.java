@@ -1,10 +1,10 @@
 package com.PopCorp.Purchases.Fragments;
 
+import android.app.Fragment;
 import android.content.Context;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +21,6 @@ import android.widget.FrameLayout;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.Controllers.MenuController;
-import com.afollestad.materialdialogs.MaterialDialog.ListCallback;
 import com.shamanland.fab.FloatingActionButton;
 
 public class MenuFragment extends Fragment{
@@ -66,6 +65,15 @@ public class MenuFragment extends Fragment{
 		listView.setItemAnimator(itemAnimator);
 
 		getLoaderManager().initLoader(MenuController.ID_FOR_CREATE_LOADER_FROM_DB, new Bundle(), controller);
+		
+		Bundle args = getArguments();
+		if (args!=null){
+			String title = args.getString(ListFragment.INTENT_TO_LIST_TITLE);
+			String datelist = args.getString(ListFragment.INTENT_TO_LIST_DATELIST);
+			if (title!=null && datelist!=null){
+				controller.openList(title, datelist);
+			}
+		}
 		return rootView;
 	}
 
@@ -103,17 +111,6 @@ public class MenuFragment extends Fragment{
 
 	public void addListFromJSON(String json) {
 		controller.addNewListFromJSON(json);
-	}
-
-	public void onListsLoaded() {
-		Bundle args = getArguments();
-		if (args!=null){
-			String title = args.getString(ListFragment.INTENT_TO_LIST_TITLE);
-			String datelist = args.getString(ListFragment.INTENT_TO_LIST_DATELIST);
-			if (title!=null && datelist!=null){
-				controller.openList(title, datelist);
-			}
-		}
 	}
 	
 	public boolean onKeyUp(int keyCode, KeyEvent event) {

@@ -35,6 +35,7 @@ public class ListItem implements Cloneable{
 	}
 	
 	public void update(DB db, String name, String count, String edizm, String coast, String category, String shop, String comment, String important){
+		db.update(DB.TABLE_ALL_ITEMS, DB.COLUMNS_ALL_ITEMS, DB.KEY_ALL_ITEMS_NAME + "='" + this.name + "'", new String[] {name, count, edizm, coast, category, shop, comment, "true"});
 		setName(name);
 		setCount(count);
 		setEdizm(edizm);

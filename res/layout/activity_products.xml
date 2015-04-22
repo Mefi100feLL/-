@@ -25,7 +25,11 @@
             android:id="@+id/activity_products_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        	android:scrollbars="vertical"
+            android:background="@android:color/background_light"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
+            android:paddingTop="8dp"
+            android:scrollbars="vertical"
             android:visibility="gone" >
 
         </android.support.v7.widget.RecyclerView>
