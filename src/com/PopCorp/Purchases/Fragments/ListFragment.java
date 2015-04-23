@@ -10,6 +10,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -44,6 +46,7 @@ import com.PopCorp.Purchases.Adapters.CategoriesAdapter;
 import com.PopCorp.Purchases.Controllers.ListController;
 import com.PopCorp.Purchases.Data.ListItem;
 import com.PopCorp.Purchases.Data.Product;
+import com.PopCorp.Purchases.Views.ItemShadowDecorator;
 import com.shamanland.fab.FloatingActionButton;
 import com.shamanland.fab.ShowHideOnScroll;
 
@@ -220,7 +223,8 @@ public class ListFragment extends Fragment{
 		
 		RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 		listView.setItemAnimator(itemAnimator);
-
+		listView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) getResources().getDrawable(R.drawable.abc_list_pressed_holo_light)));
+		
 		showHideOnScroll = new ShowHideOnScroll(floatingButton);
 		listView.setOnTouchListener(showHideOnScroll);
 

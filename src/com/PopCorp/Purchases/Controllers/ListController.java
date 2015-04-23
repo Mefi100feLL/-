@@ -110,7 +110,7 @@ public class ListController implements CallbackForLoadingSMS{
 		
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
 		adapter.sortItems();
-	}	
+	}
 	
 	private void openList(String datelist, RecyclerView listView){
 		Cursor cursor = db.getdata(DB.TABLE_LISTS, DB.COLUMNS_LISTS_WITH_ID, DB.KEY_LISTS_DATELIST + "='" + datelist + "'", null, null, null, null);
@@ -212,6 +212,7 @@ public class ListController implements CallbackForLoadingSMS{
 						if (itemsForRemove!=null){
 							currentList.getItems().addAll(itemsForRemove);
 							refreshAll();
+							adapter.notifyItemRangeChanged(0, adapter.getItemCount()-1);
 							itemsForRemove.clear();
 						}
 					}

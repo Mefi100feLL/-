@@ -137,9 +137,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		public void onDestroyActionMode(ActionMode currentActionMode) {
 			actionMode = null;
 			selectedItems.clear();
-			for (int i=0; i<publishItems.size(); i++){
-				notifyItemChanged(i);
-			}
+			notifyItemRangeChanged(0, publishItems.size()-1);
 		}
 
 		@Override
@@ -272,16 +270,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 					selectedItems.add(publishItems.get(position));
 				}
 				notifyItemChanged(position);
+				if (selectedItems.size()==0){
+					actionMode.finish();
+					actionMode = null;
+					return;
+				}
 				actionMode.setTitle(String.valueOf(selectedItems.size()));
 				if (selectedItems.size()==1){
 					actionMode.getMenu().findItem(R.id.action_edit_item).setVisible(true);
 				} else{
 					actionMode.getMenu().findItem(R.id.action_edit_item).setVisible(false);
 				}
-				if (selectedItems.size()==0){
-					actionMode.finish();
-					actionMode = null;
-				}
+				
 			}
 		});
 		if (item.isBuyed()){
@@ -331,6 +331,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void publishResults(CharSequence constraint, FilterResults results) {
+				notifyItemRangeChanged(0, publishItems.size());
 				ArrayList<ListItem> newItems = (ArrayList<ListItem>) results.values;
 				ListIterator<ListItem> iterator = (ListIterator<ListItem>) publishItems.listIterator(0);
 				while (iterator.hasNext()){
@@ -346,12 +347,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 				publishItems.addAll(tmpItems);
 
 				Collections.sort(publishItems, new ListComparator(context));
+				if (tmpItems.size() == newItems.size()){
+					notifyItemRangeInserted(0, publishItems.size()-1);
+					return;
+				}
 				for (ListItem item : tmpItems){
 					int position = publishItems.indexOf(item);
 					if (position!=-1){
 						notifyItemInserted(position);
 					}
 				}
+				//notifyItemRangeChanged(0, publishItems.size());
 				updateEditedItem();
 			}
 
