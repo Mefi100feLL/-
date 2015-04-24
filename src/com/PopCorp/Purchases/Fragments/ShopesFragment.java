@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -33,12 +33,12 @@ public static final String TAG = ShopesFragment.class.getSimpleName();
 	private ShopesController controller;
 	private SharedPreferences sPref;
 
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_shopes, container, false);
-		context = (ActionBarActivity) getActivity();
+		context = (AppCompatActivity) getActivity();
 		
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
 		

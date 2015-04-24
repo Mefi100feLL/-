@@ -11,7 +11,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -34,7 +34,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 public class PreferencesController {
 
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 	private SharedPreferences sPref;
 	private SharedPreferences.Editor editor;
 	private PreferencesFragment fragment;
@@ -48,7 +48,7 @@ public class PreferencesController {
 
 	private ArrayList<String> shopes;
 	
-	public PreferencesController(ActionBarActivity context, PreferencesFragment fragment, SharedPreferences sPref, SharedPreferences.Editor editor){
+	public PreferencesController(AppCompatActivity context, PreferencesFragment fragment, SharedPreferences sPref, SharedPreferences.Editor editor){
 		this.context = context;
 		this.sPref = sPref;
 		this.editor = editor;

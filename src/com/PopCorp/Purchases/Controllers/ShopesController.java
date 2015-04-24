@@ -11,7 +11,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.Adapters.ShopesAdapter;
@@ -27,14 +27,14 @@ public class ShopesController implements LoaderCallbacks<Cursor>{
 	public static final int ID_FOR_CREATE_SHOPES_LOADER_FROM_NET = 4;
 
 	private ShopesFragment fragment;
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 	private DB db;
 	private SharedPreferences sPref;
 
 	private ShopesAdapter adapter;
 	private ArrayList<Shop> shopes = new ArrayList<Shop>();
 
-	public ShopesController(ShopesFragment fragment, ActionBarActivity context){
+	public ShopesController(ShopesFragment fragment, AppCompatActivity context){
 		this.fragment = fragment;
 		this.context = context;
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);

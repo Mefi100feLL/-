@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -49,7 +49,7 @@ public class MenuFragment extends Fragment{
 		StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 		layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
 		
-		controller = new MenuController((ActionBarActivity) context, layoutForSnackBar, layoutManager, this);
+		controller = new MenuController((AppCompatActivity) context, layoutForSnackBar, layoutManager, this);
 		//controller.firstStart();
 
 		floatingButton.setOnClickListener(new OnClickListener(){

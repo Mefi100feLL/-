@@ -10,7 +10,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +43,7 @@ public class SalesFragment extends Fragment {
 
 	private SalesController controller;
 
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 	private DisplayImageOptions options;
 	private ImageLoader imageLoader;
 	
@@ -53,7 +53,7 @@ public class SalesFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_sales, container, false);
-		context = (ActionBarActivity) getActivity();
+		context = (AppCompatActivity) getActivity();
 		
 		imageLoader = ImageLoader.getInstance();
 		

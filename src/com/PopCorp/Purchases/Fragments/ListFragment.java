@@ -14,7 +14,7 @@ import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -100,7 +99,7 @@ public class ListFragment extends Fragment{
 
 	private SharedPreferences sPref;
 	private SharedPreferences.Editor editor;;
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 
 	private Toolbar toolBar;
 
@@ -112,7 +111,7 @@ public class ListFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_list, container, false);
-		context = (ActionBarActivity) getActivity();
+		context = (AppCompatActivity) getActivity();
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
 		editor = sPref.edit();
 

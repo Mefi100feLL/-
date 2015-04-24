@@ -28,7 +28,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -75,7 +75,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	private SharedPreferences sPref;
 	private SharedPreferences.Editor editor;
 
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 	private DB db;
 
 	private ArrayList<List> lists;
@@ -87,7 +87,7 @@ public class MenuController implements LoaderCallbacks<Cursor>, CallbackForLoadi
 	private StaggeredGridLayoutManager mLayoutManager;
 	private MenuFragment fragment;
 
-	public MenuController(ActionBarActivity activity, ViewGroup layoutForSnackBar, StaggeredGridLayoutManager mLayoutManager, MenuFragment fragment){
+	public MenuController(AppCompatActivity activity, ViewGroup layoutForSnackBar, StaggeredGridLayoutManager mLayoutManager, MenuFragment fragment){
 		this.context = activity;
 		this.layoutForSnackBar = layoutForSnackBar;
 		this.mLayoutManager = mLayoutManager;

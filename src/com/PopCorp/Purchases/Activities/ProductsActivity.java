@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +26,7 @@ import com.PopCorp.Purchases.Data.Product;
 import com.PopCorp.Purchases.Fragments.ListFragment;
 import com.shamanland.fab.FloatingActionButton;
 
-public class ProductsActivity extends ActionBarActivity{
+public class ProductsActivity extends AppCompatActivity{
 
 	public static final String INTENT_TO_PRODUCTS_LISTITEMS = "array";
 	

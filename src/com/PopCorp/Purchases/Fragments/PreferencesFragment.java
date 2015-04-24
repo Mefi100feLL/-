@@ -9,7 +9,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,7 @@ public class PreferencesFragment extends PreferenceFragment {
 	public static final String INTEGER_RESOURCE = "INTEGER_RESOURCE";
 
 	private Toolbar toolBar;
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 	private SharedPreferences sPref;
 	private PreferencesController controller;
 
@@ -37,7 +37,7 @@ public class PreferencesFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(getArguments().getInt(INTEGER_RESOURCE));
-		context = (ActionBarActivity) getActivity();
+		context = (AppCompatActivity) getActivity();
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
 		controller = new PreferencesController(context, this, sPref, sPref.edit());
 

@@ -5,7 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +21,12 @@ public class PreferencesMainFragment extends Fragment{
 	
 	public static final String TAG = PreferencesMainFragment.class.getSimpleName();
 	
-	private ActionBarActivity context;
+	private AppCompatActivity context;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_prefs, container, false);
-		context = (ActionBarActivity) getActivity();
+		context = (AppCompatActivity) getActivity();
 		
 		final String[] array = context.getResources().getStringArray(R.array.main_prefs);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item_preference, array){

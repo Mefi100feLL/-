@@ -8,14 +8,13 @@ import java.io.InputStreamReader;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -36,7 +35,7 @@ import com.PopCorp.Purchases.Fragments.PreferencesMainFragment;
 import com.PopCorp.Purchases.Fragments.SalesFragment;
 import com.PopCorp.Purchases.Fragments.ShopesFragment;
 
-public class MainActivity extends ActionBarActivity{
+public class MainActivity extends AppCompatActivity{
 
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
