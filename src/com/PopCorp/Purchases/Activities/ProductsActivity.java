@@ -24,14 +24,14 @@ import com.PopCorp.Purchases.Controllers.MenuController;
 import com.PopCorp.Purchases.Controllers.ProductsController;
 import com.PopCorp.Purchases.Data.Product;
 import com.PopCorp.Purchases.Fragments.ListFragment;
-import com.shamanland.fab.FloatingActionButton;
+import com.software.shell.fab.ActionButton;
 
 public class ProductsActivity extends AppCompatActivity{
 
 	public static final String INTENT_TO_PRODUCTS_LISTITEMS = "array";
 	
 	private RecyclerView listView;
-	private FloatingActionButton floatingButton;
+	private ActionButton floatingButton;
 	private Toolbar toolBar;
 	private ProgressBar progress;
 	private TextView textViewEmpty;
@@ -51,7 +51,7 @@ public class ProductsActivity extends AppCompatActivity{
 	    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		listView = (RecyclerView) findViewById(R.id.activity_products_listview);
-		floatingButton = (FloatingActionButton) findViewById(R.id.activity_products_floating_action_button);
+		floatingButton = (ActionButton) findViewById(R.id.activity_products_floating_action_button);
 		floatingButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {

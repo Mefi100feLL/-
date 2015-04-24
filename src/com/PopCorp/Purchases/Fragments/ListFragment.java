@@ -46,8 +46,7 @@ import com.PopCorp.Purchases.Controllers.ListController;
 import com.PopCorp.Purchases.Data.ListItem;
 import com.PopCorp.Purchases.Data.Product;
 import com.PopCorp.Purchases.Views.ItemShadowDecorator;
-import com.shamanland.fab.FloatingActionButton;
-import com.shamanland.fab.ShowHideOnScroll;
+import com.software.shell.fab.ActionButton;
 
 public class ListFragment extends Fragment{
 
@@ -89,11 +88,11 @@ public class ListFragment extends Fragment{
 	private TextView textviewForTotalCount;
 
 	private ListController controller;
-	private FloatingActionButton floatingButton;
+	private ActionButton floatingButton;
 	private Menu menu;
 
 
-	public FloatingActionButton getFloatingButton() {
+	public ActionButton getFloatingButton() {
 		return floatingButton;
 	}
 
@@ -102,8 +101,6 @@ public class ListFragment extends Fragment{
 	private AppCompatActivity context;
 
 	private Toolbar toolBar;
-
-	private ShowHideOnScroll showHideOnScroll;
 
 	private ArrayList<String> categories;
 	private ArrayList<Integer> colors;
@@ -132,7 +129,7 @@ public class ListFragment extends Fragment{
 		textviewForTotal = (TextView) rootView.findViewById(R.id.fragment_list_textview_total);
 		textviewForTotalBuyedCount = (TextView) rootView.findViewById(R.id.fragment_list_textview_total_buyed_count);
 		textviewForTotalCount = (TextView) rootView.findViewById(R.id.fragment_list_textview_total_count);
-		floatingButton = (FloatingActionButton) rootView.findViewById(R.id.fragment_list_floating_action_button);
+		floatingButton = (ActionButton) rootView.findViewById(R.id.fragment_list_floating_action_button);
 
 		layoutForSnackBar = (FrameLayout) rootView.findViewById(R.id.fragment_list_layout_for_snackbar);
 
@@ -167,7 +164,7 @@ public class ListFragment extends Fragment{
 					}
 					layoutWithFields.setVisibility(View.GONE);
 					clearFields();
-					floatingButton.setImageResource(R.drawable.ic_add);
+					floatingButton.setImageResource(R.drawable.ic_add_white_24dp);
 				}
 			}
 		});
@@ -224,9 +221,6 @@ public class ListFragment extends Fragment{
 		listView.setItemAnimator(itemAnimator);
 		listView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) getResources().getDrawable(R.drawable.abc_list_pressed_holo_light)));
 		
-		showHideOnScroll = new ShowHideOnScroll(floatingButton);
-		listView.setOnTouchListener(showHideOnScroll);
-
 		initializeEdizms();
 		initializeSpinnerForCategory();
 		initializeSpinnerForShop();
@@ -467,7 +461,7 @@ public class ListFragment extends Fragment{
 		if (layoutWithFields.getVisibility() == View.VISIBLE){
 			layoutWithFields.setVisibility(View.GONE);
 			clearFields();
-			floatingButton.setImageResource(R.drawable.ic_add);
+			floatingButton.setImageResource(R.drawable.ic_add_white_24dp);
 			return;
 		}
 		if (controller.closeActionMode()){
@@ -495,10 +489,6 @@ public class ListFragment extends Fragment{
 		item.getSubMenu().setGroupCheckable(groupId, true, true);
 		item.getSubMenu().setGroupEnabled(groupId, true);
 		item.setVisible(true);
-	}
-
-	public void showFloatingButton(){
-		showHideOnScroll.onScrollDown();
 	}
 
 

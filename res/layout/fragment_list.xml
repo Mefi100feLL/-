@@ -104,7 +104,7 @@
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
-    <com.shamanland.fab.FloatingActionButton
+    <com.software.shell.fab.ActionButton
         android:id="@+id/fragment_list_floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,7 +112,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
-        android:src="@drawable/ic_add"
-        app:floatingActionButtonSize="normal" />
+        android:src="@drawable/ic_add_white_24dp" />
 
 </RelativeLayout>

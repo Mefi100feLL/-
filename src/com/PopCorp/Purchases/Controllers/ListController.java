@@ -187,7 +187,7 @@ public class ListController implements CallbackForLoadingSMS{
 		adapter.notifyItemChanged(adapter.getPublishItems().indexOf(listItem));
 		fragment.putItemInFields(editedItem);
 		fragment.getFloatingButton().setImageResource(R.drawable.ic_create_white_24dp);
-		fragment.showFloatingButton();
+		//fragment.showFloatingButton();
 	}
 
 	public void removeItems(ArrayList<ListItem> selectedItems) {

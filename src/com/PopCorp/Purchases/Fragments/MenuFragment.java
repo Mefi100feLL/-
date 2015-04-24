@@ -14,14 +14,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.Controllers.MenuController;
-import com.shamanland.fab.FloatingActionButton;
+import com.software.shell.fab.ActionButton;
 
 public class MenuFragment extends Fragment{
 
@@ -33,7 +35,7 @@ public class MenuFragment extends Fragment{
 	private MenuController controller;
 	private FrameLayout layoutForSnackBar;
 
-	private FloatingActionButton floatingButton;
+	private ActionButton floatingButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class MenuFragment extends Fragment{
 		setHasOptionsMenu(true);
 
 		listView = (RecyclerView) rootView.findViewById(R.id.fragment_menu_listview);
-		floatingButton = (FloatingActionButton) rootView.findViewById(R.id.fragment_menu_floating_action_button);
+		floatingButton = (ActionButton) rootView.findViewById(R.id.fragment_menu_floating_action_button);
 		layoutForSnackBar = (FrameLayout) rootView.findViewById(R.id.fragment_menu_layout_for_snackbar);
 
 		StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -52,6 +54,20 @@ public class MenuFragment extends Fragment{
 		controller = new MenuController((AppCompatActivity) context, layoutForSnackBar, layoutManager, this);
 		//controller.firstStart();
 
+		floatingButton.setOnTouchListener(new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction()==MotionEvent.ACTION_DOWN){
+					floatingButton.setShadowRadius(13f);
+				}
+				if (event.getAction()==MotionEvent.ACTION_UP){
+					floatingButton.setShadowRadius(5f);
+				}
+				return false;
+			}
+		});
+		
 		floatingButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
