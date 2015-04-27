@@ -19,6 +19,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -139,6 +143,10 @@ public class ListFragment extends Fragment{
 				if (layoutWithFields.getVisibility() == View.GONE){
 					clearFields();
 					layoutWithFields.setVisibility(View.VISIBLE);
+					
+					Animation animForFields = AnimationUtils.loadAnimation(context, R.anim.list_fields_from_bottom);
+					layoutWithFields.setAnimation(animForFields);
+					layoutWithFields.startAnimation(animForFields);
 				} else {
 					if (!editTextForName.getText().toString().isEmpty()){
 						String shop = (String) spinnerForShop.getSelectedItem();
@@ -164,10 +172,29 @@ public class ListFragment extends Fragment{
 					}
 					layoutWithFields.setVisibility(View.GONE);
 					clearFields();
-					floatingButton.setImageResource(R.drawable.ic_add_white_24dp);
+					floatingButton.setHideAnimation(ActionButton.Animations.SCALE_DOWN);
+					floatingButton.getHideAnimation().setAnimationListener(new AnimationListener(){
+						@Override
+						public void onAnimationStart(Animation animation) {
+							
+						}
+
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							floatingButton.setImageResource(R.drawable.ic_add_white_24dp);
+							floatingButton.setShowAnimation(ActionButton.Animations.SCALE_UP);
+							floatingButton.show();
+						}
+
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							
+						}
+					});
+					floatingButton.hide();
 				}
 			}
-		});
+		});		
 
 		setHasOptionsMenu(true);
 
@@ -281,6 +308,9 @@ public class ListFragment extends Fragment{
 	public void putItemInFields(ListItem item){
 		if (layoutWithFields.getVisibility() == View.GONE){
 			layoutWithFields.setVisibility(View.VISIBLE);
+			Animation anim = AnimationUtils.loadAnimation(context, R.anim.list_fields_for_editing);
+			layoutWithFields.setAnimation(anim);
+			layoutWithFields.startAnimation(anim);
 		}
 		editTextForName.setText(item.getName());
 		editTextForName.requestFocus(); 
@@ -326,12 +356,14 @@ public class ListFragment extends Fragment{
 	public void onResume(){
 		super.onResume();
 		controller.openDB();
+		showActionButton();
 	}
 
 	@Override
 	public void onStop(){
 		super.onStop();
 		controller.closeDB();
+		hideActionButton();
 	}
 
 	public void showTotals(String totalBuyed, String total, String size) {
@@ -505,5 +537,15 @@ public class ListFragment extends Fragment{
 				}
 			}
 		});
+	}
+	
+	public void showActionButton() {
+		floatingButton.setShowAnimation(ActionButton.Animations.SCALE_UP);
+		floatingButton.show();
+	}
+
+	public void hideActionButton() {
+		floatingButton.setHideAnimation(ActionButton.Animations.SCALE_DOWN);
+		floatingButton.hide();
 	}
 }

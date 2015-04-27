@@ -8,6 +8,8 @@ import java.util.ListIterator;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -136,6 +138,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		@Override
 		public void onDestroyActionMode(ActionMode currentActionMode) {
 			actionMode = null;
+			controller.showActionButton();
 			selectedItems.clear();
 			notifyItemRangeChanged(0, publishItems.size()-1);
 		}
@@ -247,6 +250,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 							changeItemInActionMode(position);
 						} else{
 							listView.startActionMode(callback);
+							controller.hideActionButton();
 							selectedItems.add(publishItems.get(position));
 							actionMode.setTitle(String.valueOf(selectedItems.size()));
 							notifyItemChanged(position);

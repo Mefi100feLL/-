@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -187,7 +188,7 @@ public class ListController implements CallbackForLoadingSMS{
 		adapter.notifyItemChanged(adapter.getPublishItems().indexOf(listItem));
 		fragment.putItemInFields(editedItem);
 		fragment.getFloatingButton().setImageResource(R.drawable.ic_create_white_24dp);
-		//fragment.showFloatingButton();
+		fragment.showActionButton();
 	}
 
 	public void removeItems(ArrayList<ListItem> selectedItems) {
@@ -704,4 +705,12 @@ public class ListController implements CallbackForLoadingSMS{
 			});
 		}
 	};
+
+	public void hideActionButton() {
+		fragment.hideActionButton();
+	}
+
+	public void showActionButton() {
+		fragment.showActionButton();
+	}
 }
