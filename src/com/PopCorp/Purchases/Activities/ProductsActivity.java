@@ -42,7 +42,6 @@ public class ProductsActivity extends AppCompatActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_products);
-		
 		toolBar = (Toolbar) findViewById(R.id.activity_products_toolbar);
 		progress = (ProgressBar) findViewById(R.id.activity_products_progressbar);
 		textViewEmpty = (TextView) findViewById(R.id.activity_products_textview_empty);
@@ -86,6 +85,7 @@ public class ProductsActivity extends AppCompatActivity{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_for_products, menu);
+		showActionButton();
 		return true;
 	}
 
@@ -93,6 +93,7 @@ public class ProductsActivity extends AppCompatActivity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 		case android.R.id.home:{
+			hideActionButton();
 			finish();
 			break;
 		}
@@ -102,6 +103,11 @@ public class ProductsActivity extends AppCompatActivity{
 		}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
 	}
 	
 	@Override
@@ -121,6 +127,15 @@ public class ProductsActivity extends AppCompatActivity{
 			listView.setVisibility(View.VISIBLE);
 			textViewEmpty.setVisibility(View.GONE);
 		}
-		
+	}
+	
+	public void showActionButton() {
+		floatingButton.setShowAnimation(ActionButton.Animations.SCALE_UP);
+		floatingButton.show();
+	}
+
+	public void hideActionButton() {
+		floatingButton.setHideAnimation(ActionButton.Animations.SCALE_DOWN);
+		floatingButton.hide();
 	}
 }

@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,13 +16,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -41,13 +36,11 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.SD;
 import com.PopCorp.Purchases.Activities.MainActivity;
 import com.PopCorp.Purchases.Adapters.ListAdapter;
-import com.PopCorp.Purchases.Comparators.ListComparator;
 import com.PopCorp.Purchases.Data.List;
 import com.PopCorp.Purchases.Data.ListItem;
 import com.PopCorp.Purchases.Data.Product;
 import com.PopCorp.Purchases.DataBase.DB;
 import com.PopCorp.Purchases.Fragments.ListFragment;
-import com.PopCorp.Purchases.Loaders.ListLoader;
 import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS;
 import com.PopCorp.Purchases.Loaders.LoaderItemsFromSMS.CallbackForLoadingSMS;
 import com.PopCorp.Purchases.Utilites.ListWriter;
@@ -89,6 +82,7 @@ public class ListController implements CallbackForLoadingSMS{
 	private ArrayList<ListItem> itemsForRemove = new ArrayList<ListItem>();
 	private ListItem editedItem;
 	
+	
 	public ListController(ListFragment fragment, String title, String datelist, RecyclerView listView, ViewGroup layoutForSnackBar){
 		this.fragment = fragment;
 		this.layoutForSnackBar = layoutForSnackBar;
@@ -110,7 +104,6 @@ public class ListController implements CallbackForLoadingSMS{
 		createListFromJSON(json);
 		
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
-		adapter.sortItems();
 	}
 	
 	private void openList(String datelist, RecyclerView listView){
@@ -126,7 +119,6 @@ public class ListController implements CallbackForLoadingSMS{
 			return;
 		}
 		adapter = new ListAdapter(context, currentList.getItems(), this, currentList.getCurrency(), listView);
-		adapter.sortItems();
 	}
 	
 	private void createListFromJSON(String json) {
@@ -169,23 +161,15 @@ public class ListController implements CallbackForLoadingSMS{
 
 	
 	/////////////////////////////////////////////////////////////// OPERATIONS WITH ITEMS //////////////////////////////////////////////////
-	public void changeItemBuyed(ListItem item){
+	public void changeItemBuyed(int positionInPublish, ListItem item){
 		item.changeBuyed(db);
-		adapter.notifyItemChanged(adapter.getPublishItems().indexOf(item));
-		if (sPref.getBoolean(SD.PREFS_REPLACE_BUYED, true)){
-			int oldPosition = adapter.getPublishItems().indexOf(item);
-			adapter.sortItems();
-			int newPosition = adapter.getPublishItems().indexOf(item);
-			if (newPosition!=oldPosition){
-				adapter.notifyItemMoved(oldPosition, newPosition);
-			}
-		}
+		adapter.getPublishItems().updateItemAt(positionInPublish, item);
 		recoastTotals();
 	}
 	
 	public void startEditingItem(ListItem listItem) {
 		editedItem = listItem;
-		adapter.notifyItemChanged(adapter.getPublishItems().indexOf(listItem));
+		//adapter.notifyItemChanged(adapter.getPublishItems().indexOf(listItem));
 		fragment.putItemInFields(editedItem);
 		fragment.getFloatingButton().setImageResource(R.drawable.ic_create_white_24dp);
 		fragment.showActionButton();
@@ -213,7 +197,6 @@ public class ListController implements CallbackForLoadingSMS{
 						if (itemsForRemove!=null){
 							currentList.getItems().addAll(itemsForRemove);
 							refreshAll();
-							adapter.notifyItemRangeChanged(0, adapter.getItemCount()-1);
 							itemsForRemove.clear();
 						}
 					}
@@ -275,10 +258,9 @@ public class ListController implements CallbackForLoadingSMS{
 			}
 		}
 		int oldPosition = adapter.getPublishItems().indexOf(editedItem);
-		adapter.notifyItemChanged(oldPosition);
 		editedItem.update(db, name, count, edizm, coast, category, shop, comment, important);
+		adapter.getPublishItems().updateItemAt(oldPosition, editedItem);
 		refreshAll();
-		adapter.setUpdatedItem(oldPosition, editedItem);
 		editedItem = null;
 		return true;
 	}
@@ -519,7 +501,7 @@ public class ListController implements CallbackForLoadingSMS{
 		if (!currentList.getCurrency().equals(currency)){
 			currentList.changeCurrency(db, currency);
 			adapter.setCurrency(currency);
-			adapter.notifyDataSetChanged();
+			//adapter.notifyDataSetChanged();
 		}
 		refreshAll();
 		return true;

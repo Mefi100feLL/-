@@ -124,7 +124,7 @@ public class List {
 	}
 
 	public ListItem addListItem(Cursor cursor){
-		ListItem item = new ListItem(
+		ListItem item = new ListItem( 
 				cursor.getLong(cursor.getColumnIndex(DB.KEY_ID)),
 				cursor.getString(cursor.getColumnIndex(DB.KEY_ITEMS_DATELIST)),
 				cursor.getString(cursor.getColumnIndex(DB.KEY_ITEMS_NAME)),

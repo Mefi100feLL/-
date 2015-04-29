@@ -31,13 +31,12 @@
         android:layout_marginRight="16dp"
         android:src="@drawable/ic_add_white_24dp"
         fab:button_color="@color/accent"
-        fab:hide_animation="@anim/fab_roll_to_down"
+        fab:button_colorPressed="@color/accent_dark"
         fab:image="@drawable/ic_add_white_24dp"
         fab:shadow_color="#757575"
         fab:shadow_radius="5.0dp"
         fab:shadow_xOffset="0dp"
         fab:shadow_yOffset="5.0dp"
-        fab:show_animation="@anim/fab_roll_from_down"
         fab:type="DEFAULT" />
 
 </RelativeLayout>

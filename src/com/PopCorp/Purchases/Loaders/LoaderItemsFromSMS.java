@@ -1,6 +1,8 @@
 package com.PopCorp.Purchases.Loaders;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import android.content.ContentResolver;
@@ -78,7 +80,9 @@ public class LoaderItemsFromSMS extends AsyncTask<Void, Void, Boolean>{
 	private void addSmsMap(final Cursor cursor) {
 		HashMap<String, String> smsMap = new HashMap<String, String>();
 		smsMap.put(SD.SMS_KEY_ADDRESS, cursor.getString(cursor.getColumnIndex(SD.SMS_KEY_ADDRESS)));
-		smsMap.put(SD.SMS_KEY_DATE, cursor.getString(cursor.getColumnIndex(SD.SMS_KEY_DATE)));
+		Calendar date = Calendar.getInstance();
+		date.setTimeInMillis(Long.valueOf(cursor.getString(cursor.getColumnIndex(SD.SMS_KEY_DATE))));
+		smsMap.put(SD.SMS_KEY_DATE, new SimpleDateFormat("dd.MM.yy HH:mm").format(date.getTime()));
 		smsMap.put(SD.SMS_KEY_BODY, cursor.getString(cursor.getColumnIndex(SD.SMS_KEY_BODY)));
 		mapsSMS.add(smsMap);
 	}

@@ -1,16 +1,13 @@
 package com.PopCorp.Purchases.Adapters;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.ListIterator;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.preference.PreferenceManager;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.ActionMode;
@@ -37,11 +34,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
 	private MainActivity context;
 	private ArrayList<ListItem> items;
-	private ArrayList<ListItem> publishItems = new ArrayList<ListItem>();
+	private SortedList<ListItem> publishItems;
 	private ArrayList<ListItem> selectedItems = new ArrayList<ListItem>();
 	private ListController controller;
-	private ListItem updatedItem;
-	private int oldPosition = -1;
 	private HashMap<String, Integer> categories;
 
 	private String currency;
@@ -49,15 +44,56 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 	private ActionMode actionMode;
 	private SharedPreferences sPref;
 
-	public ListAdapter(MainActivity context, ArrayList<ListItem> items, ListController controller, String currency, RecyclerView listView){
+	public ListAdapter(MainActivity ctx, ArrayList<ListItem> items, ListController controller, String currency, RecyclerView listView){
 		super();
-		this.context = context;
+		this.context = ctx;
 		this.items = items;
-		publishItems.addAll(items);
+		publishItems = new SortedList<ListItem>(ListItem.class, new SortedList.Callback<ListItem>() {
+			@Override
+			public boolean areContentsTheSame(ListItem oneItem, ListItem twoItem) {
+				if (oneItem.getFields().equals(twoItem.getFields())){
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public boolean areItemsTheSame(ListItem oneItem, ListItem twoItem) {
+				if (oneItem==twoItem){
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public int compare(ListItem oneItem, ListItem twoItem) {
+				return new ListComparator(context).compare(oneItem, twoItem);
+			}
+
+			@Override
+			public void onChanged(int position, int count) {
+				notifyItemRangeChanged(position, count);
+			}
+
+			@Override
+			public void onInserted(int position, int count) {
+				notifyItemRangeInserted(position, count);
+			}
+
+			@Override
+			public void onMoved(int fromPosition, int toPosition) {
+				notifyItemMoved(fromPosition, toPosition);
+			}
+
+			@Override
+			public void onRemoved(int position, int count) {
+				notifyItemRangeRemoved(position, count);
+			}
+		});
 		this.controller = controller;
 		this.currency = currency;
 		this.listView = listView;
-		sPref = PreferenceManager.getDefaultSharedPreferences(context);
+		sPref = PreferenceManager.getDefaultSharedPreferences(ctx);
 		categories = getCategories();
 	}
 
@@ -259,7 +295,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 						if (actionMode!=null){
 							changeItemInActionMode(position);
 						} else{
-							controller.changeItemBuyed(publishItems.get(position));
+							controller.changeItemBuyed(position, publishItems.get(position));
 						}
 					}
 				} catch(Exception e){
@@ -335,46 +371,20 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void publishResults(CharSequence constraint, FilterResults results) {
-				notifyItemRangeChanged(0, publishItems.size());
 				ArrayList<ListItem> newItems = (ArrayList<ListItem>) results.values;
-				ListIterator<ListItem> iterator = (ListIterator<ListItem>) publishItems.listIterator(0);
-				while (iterator.hasNext()){
-					ListItem item = iterator.next();
-					if (!newItems.contains(item)){
-						int position = publishItems.indexOf(item);
-						iterator.remove();
-						notifyItemRemoved(position);
+				ArrayList<ListItem> itemsForRemove = new ArrayList<ListItem>();
+				for (int i=0; i<publishItems.size(); i++){
+					if (!newItems.contains(publishItems.get(i))){
+						itemsForRemove.add(publishItems.get(i));
 					}
 				}
-				ArrayList<ListItem> tmpItems = new ArrayList<ListItem>(newItems);
-				tmpItems.removeAll(publishItems);
-				publishItems.addAll(tmpItems);
-
-				Collections.sort(publishItems, new ListComparator(context));
-				if (tmpItems.size() == newItems.size()){
-					notifyItemRangeInserted(0, publishItems.size()-1);
-					return;
+				for (ListItem item : itemsForRemove){
+					publishItems.remove(item);
 				}
-				for (ListItem item : tmpItems){
-					int position = publishItems.indexOf(item);
-					if (position!=-1){
-						notifyItemInserted(position);
+				for (ListItem item : newItems){
+					if (publishItems.indexOf(item)==-1){
+						publishItems.add(item);
 					}
-				}
-				//notifyItemRangeChanged(0, publishItems.size());
-				updateEditedItem();
-			}
-
-			private void updateEditedItem() {
-				if (updatedItem!=null){
-					int newPosition = publishItems.indexOf(updatedItem);
-					if (oldPosition!=-1 && newPosition!=-1){
-						if (oldPosition != newPosition){
-							notifyItemMoved(oldPosition, newPosition);
-						}
-					}
-					updatedItem = null;
-					oldPosition = -1;
 				}
 			}
 
@@ -417,16 +427,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 		this.currency = currency;
 	}
 
-	public void setUpdatedItem(int oldPosition, ListItem editedItem) {
-		this.oldPosition = oldPosition;
-		this.updatedItem = editedItem;
-	}
-
-	public void sortItems(){
-		Collections.sort(publishItems, new ListComparator(context));
-	}
-
-	public ArrayList<ListItem> getPublishItems() {
+	public SortedList<ListItem> getPublishItems() {
 		return publishItems;
 	}
 

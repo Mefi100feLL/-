@@ -93,7 +93,8 @@ public class ListItem implements Cloneable{
 	
 	
 	public ListItem clone(){
-		return new ListItem(new Long(id),
+		return new ListItem(
+				new Long(id),
 				new String(datelist),
 				new String(name),
 				new String(String.valueOf(count)),
