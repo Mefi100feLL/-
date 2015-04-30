@@ -347,7 +347,7 @@ public class ListFragment extends Fragment{
 			if (requestCode == REQUEST_CODE_FOR_INTENT_TO_PRODUCTS) {
 				controller.openDB();
 				ArrayList<Product> returnedArray = data.getParcelableArrayListExtra(INTENT_TO_LIST_RETURNED_LISTITEMS);
-				controller.updateArray(returnedArray);
+				controller.updateListFromProducts(returnedArray);
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -357,7 +357,12 @@ public class ListFragment extends Fragment{
 	public void onResume(){
 		super.onResume();
 		controller.openDB();
-		showActionButton();
+		listView.postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				showActionButton();
+			}
+		}, 300);
 	}
 
 	@Override

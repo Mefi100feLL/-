@@ -6,6 +6,6 @@
         android:id="@+id/action_load_list"
         app:showAsAction="always"
         android:title="@string/action_load_list"
-        android:icon="@drawable/ic_inbox"/>
+        android:icon="@drawable/ic_inbox_white_24dp"/>
 
 </menu>

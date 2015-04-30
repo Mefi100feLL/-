@@ -6,7 +6,7 @@
         android:id="@+id/action_all_items"
         app:showAsAction="always"
         android:title="@string/action_all_items" 
-        android:icon="@drawable/ic_action_view_as_list"/>
+        android:icon="@drawable/ic_view_list_white_24dp"/>
     
     <item
         android:id="@+id/action_filter"

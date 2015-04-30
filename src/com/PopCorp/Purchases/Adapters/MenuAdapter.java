@@ -31,7 +31,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>{
 		public TextView name;
 		public TextView items;
 		public TextView count;
-		public ImageView alarm;
 		public ImageView overflow;
 		public View divider;
 		public List list;
@@ -43,7 +42,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder>{
 			name = (TextView) view.findViewById(R.id.content_card_textview_name);
 			items = (TextView) view.findViewById(R.id.content_card_textview_items);
 			count = (TextView) view.findViewById(R.id.content_card_textview_total_count);
-			alarm = (ImageView) view.findViewById(R.id.content_card_alarm_image);
 			overflow = (ImageView) view.findViewById(R.id.content_card_overflow_image);
 			divider = view.findViewById(R.id.content_card_divider);
 			((ViewGroup) view).getChildAt(0).setOnClickListener(this);

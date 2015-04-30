@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:padding="4dp"
-                    android:src="@drawable/ic_important" />
+                    android:src="@drawable/ic_info_outline_grey600_18dp" />
             </LinearLayout>
 
             <LinearLayout

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
-        android:src="@drawable/ic_important" />
+        android:src="@drawable/ic_info_outline_grey600_18dp" />
 
     <TextView
         android:id="@+id/item_navigation_list_text"

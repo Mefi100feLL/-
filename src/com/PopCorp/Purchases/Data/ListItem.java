@@ -35,7 +35,11 @@ public class ListItem implements Cloneable{
 	}
 	
 	public void update(DB db, String name, String count, String edizm, String coast, String category, String shop, String comment, String important){
-		db.update(DB.TABLE_ALL_ITEMS, DB.COLUMNS_ALL_ITEMS, DB.KEY_ALL_ITEMS_NAME + "='" + this.name + "'", new String[] {name, count, edizm, coast, category, shop, comment, "true"});
+		if (this.name.equals(name)){
+			db.update(DB.TABLE_ALL_ITEMS, DB.COLUMNS_ALL_ITEMS, DB.KEY_ALL_ITEMS_NAME + "='" + this.name + "'", new String[] {name, count, edizm, coast, category, shop, comment, "true"});
+		} else{
+			db.addRec(DB.TABLE_ALL_ITEMS, DB.COLUMNS_ALL_ITEMS, new String[] {name, count, edizm, coast, category, shop, comment, "true"});
+		}
 		setName(name);
 		setCount(count);
 		setEdizm(edizm);
@@ -93,8 +97,7 @@ public class ListItem implements Cloneable{
 	
 	
 	public ListItem clone(){
-		return new ListItem(
-				new Long(id),
+		return new ListItem(id,
 				new String(datelist),
 				new String(name),
 				new String(String.valueOf(count)),

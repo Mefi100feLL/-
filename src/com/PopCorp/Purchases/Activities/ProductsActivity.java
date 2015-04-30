@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -54,7 +56,20 @@ public class ProductsActivity extends AppCompatActivity{
 		floatingButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				applyAndGoBack();
+				floatingButton.setHideAnimation(ActionButton.Animations.SCALE_DOWN);
+				floatingButton.getHideAnimation().setAnimationListener(new AnimationListener(){
+					@Override
+					public void onAnimationStart(Animation animation) {}
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						applyAndGoBack();
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {}
+				});
+				floatingButton.hide();
 			}
 		});
 		
@@ -83,9 +98,19 @@ public class ProductsActivity extends AppCompatActivity{
 	}
 	
 	@Override
+	public void onPostResume(){
+		super.onPostResume();
+		listView.postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				showActionButton();
+			}
+		}, 300);
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_for_products, menu);
-		showActionButton();
 		return true;
 	}
 

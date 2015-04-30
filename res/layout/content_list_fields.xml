@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/background_for_buttons"
             android:padding="8dp"
-            android:src="@drawable/ic_keyboard_voice" />
+            android:src="@drawable/ic_keyboard_voice_grey600_36dp" />
 
     </LinearLayout>
 
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_for_buttons"
                 android:padding="8dp"
-                android:src="@drawable/ic_minus" />
+                android:src="@drawable/ic_remove_grey600_36dp" />
 
             <EditText
                 android:id="@+id/fragment_list_edittext_for_count"
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_for_buttons"
                 android:padding="8dp"
-                android:src="@drawable/ic_plus" />
+                android:src="@drawable/ic_add_grey600_36dp" />
 
         </LinearLayout>
 

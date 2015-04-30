@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_for_buttons"
                 android:padding="8dp"
-                android:src="@drawable/ic_minus"
+                android:src="@drawable/ic_remove_grey600_36dp"
                 android:stateListAnimator="@anim/button_elevation" />
 
             <TextView
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_for_buttons"
                 android:padding="8dp"
-                android:src="@drawable/ic_plus" />
+                android:src="@drawable/ic_add_grey600_36dp" />
         </LinearLayout>
     </LinearLayout>
 

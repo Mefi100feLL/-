@@ -169,7 +169,6 @@ public class ListController implements CallbackForLoadingSMS{
 	
 	public void startEditingItem(ListItem listItem) {
 		editedItem = listItem;
-		//adapter.notifyItemChanged(adapter.getPublishItems().indexOf(listItem));
 		fragment.putItemInFields(editedItem);
 		fragment.getFloatingButton().setImageResource(R.drawable.ic_create_white_24dp);
 		fragment.showActionButton();
@@ -301,7 +300,7 @@ public class ListController implements CallbackForLoadingSMS{
 	}
 	
 	
-	public void updateArray(ArrayList<Product> newArray){
+	public void updateListFromProducts(ArrayList<Product> newArray){
 		currentList.updateItems(db, newArray);
 		adapter.notifyItemRangeChanged(0, adapter.getPublishItems().size());
 		refreshAll();
